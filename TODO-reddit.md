@@ -9,7 +9,7 @@ Test: frisches Arch-Rootfs (~/.cache/suite-installtest/arch), alle App-Installer
 - [x] 5. packages.txt vervollständigen (awww, cliphist, brightnessctl, wofi, rofi, jq, networkmanager, bluez(-utils), hyprsunset, hyprpicker, wf-recorder, libnotify, xdg-desktop-portal-hyprland, polkit-Agent, python-gobject, gtk4, zen-browser(AUR), wlogout(AUR) kennzeichnen; unbenutzte quickshell/hyprpaper raus)
 
 ## Noch offen
-- [ ] 1. Repo danger-inc/dotfiles ist PRIVATE → am Ende public schalten (zuerst alles unten erledigen)
+- [x] 1. Repo danger-inc/dotfiles ist seit 2026-10-27 PUBLIC (Force-Push von 5ac5e98 vorher erledigt; alte Historie nur lokal im Branch old-history, nie pushen)
 - [x] 6. hypridle und swaync werden in hyprland.lua nicht gestartet (evtl. systemd-User-Dienste bei dir) → exec_cmd ergänzen
 - [x] 7. hyprlock-Hintergrund ~/.cache/current_wallpaper.png nur durch Super+L → Idle-Sperre ohne Bild; lock.sh/hyprlock-Pfad fixen
 - [x] 8. Fremdautor „L€yzS“ in wallpaper-picker.sh, scripts/wallpaper-picker2.sh, scripts/wallpapers/random-wallpaper.sh, waybar/style-classic.css → Credit oder entfernen
