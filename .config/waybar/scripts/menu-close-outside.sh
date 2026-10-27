@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# Wird von Hyprland bei jedem Linksklick aufgerufen (siehe hyprland.lua).
-# Liegt der Klick außerhalb eines offenen Menüs (wofi: WLAN/Bluetooth, rofi: Super+R,
-# volume-mixer: Lautstärke),
-# wird es geschlossen. Klicks auf Fenster fängt click-catcher.py ab; dieses Skript sorgt
-# dafür, dass ein Klick auf die Waybar das Menü schließt und trotzdem dort ankommt
-# (wofi läuft dafür mit Tastatur "bei Bedarf", siehe menu-lib.sh).
+# Called by Hyprland on every left click (see hyprland.lua).
+# If the click is outside an open menu (wofi: wifi/bluetooth, rofi: Super+R,
+# volume-mixer: volume),
+# it is closed. Clicks on windows are caught by click-catcher.py; this script makes sure
+# that a click on the waybar closes the menu and still arrives there
+# (wofi runs with keyboard "on demand" for that, see menu-lib.sh).
 
-MIXER_OPEN="${XDG_RUNTIME_DIR:-/tmp}/volume-mixer-open"   # existiert, solange der Mixer sichtbar ist
+MIXER_OPEN="${XDG_RUNTIME_DIR:-/tmp}/volume-mixer-open"   # exists as long as the mixer is visible
 [[ -e $MIXER_OPEN ]] || pgrep -x 'wofi|rofi' >/dev/null || exit 0
 
 source "$HOME/.config/waybar/scripts/menu-lib.sh"
 
-# Menü gerade erst geöffnet (z. B. durch genau diesen Klick aufs Icon): in Ruhe lassen
+# menu was just opened (e.g. by exactly this click on the icon): leave it alone
 if [[ -f $MENU_OPENED ]]; then
     read -r t _ < "$MENU_OPENED"
     (( $(now_ms) - t < 500 )) && exit 0

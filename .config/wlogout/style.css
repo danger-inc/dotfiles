@@ -1,6 +1,6 @@
-/* Power-Menü im Waybar-Stil: kompakte Karten, Farben und Icons kommen von matugen.
- * Icons: PNGs in ~/.cache/matugen/wlogout, erzeugt von make-icons.py
- * Gestartet über ~/.config/wlogout/launch.sh, das die Karten mittig platziert. */
+/* Power menu in the waybar style: compact cards, colors and icons come from matugen.
+ * Icons: PNGs in ~/.cache/matugen/wlogout, created by make-icons.py
+ * Started through ~/.config/wlogout/launch.sh, which centers the cards. */
 @import url("file://@HOME@/.cache/ist/colors.css");
 
 * {
@@ -12,7 +12,7 @@
     text-shadow: none;
 }
 
-/* abgedunkelt; der Blur kommt von der Layer-Regel in hyprland.lua */
+/* darkened; the blur comes from the layer rule in hyprland.lua */
 window {
     background-color: rgba(0, 0, 0, 0.45);
 }
@@ -23,9 +23,9 @@ button {
     border: 2px solid @color9;
     border-radius: 15px;
     margin: 8px;
-    min-width: 98px;    /* alle Karten gleich groß; passt zu card_w/card_h in launch.sh */
+    min-width: 98px;    /* all cards the same size; matches card_w/card_h in launch.sh */
     min-height: 100px;  /* + 96px padding = 196px */
-    padding: 96px 0 0 0;  /* schiebt die Beschriftung unter das Icon */
+    padding: 96px 0 0 0;  /* pushes the label below the icon */
     background-repeat: no-repeat;
     background-position: center 40%;
     background-size: 42px;
@@ -33,14 +33,14 @@ button {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* kein automatisch markierter erster Button beim Öffnen */
+/* no automatically highlighted first button when opening */
 button:focus {
     background-color: @background;
     color: @foreground;
     border: 2px solid @color9;
 }
 
-/* gleiche Hover-Farbe wie die Waybar-Module */
+/* same hover color as the waybar modules */
 button:hover {
     background-color: @color9;
     color: @background;

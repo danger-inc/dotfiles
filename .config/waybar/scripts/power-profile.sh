@@ -1,5 +1,5 @@
 #!/bin/bash
-# Rechtsklick auf den Akku: zwischen den Energieprofilen wechseln und kurz anzeigen, welches jetzt aktiv ist.
+# Right click on the battery: switch between the power profiles and briefly show which one is active now.
 mapfile -t profiles < <(powerprofilesctl list | sed -n 's/^[ *]*\([a-z-]*\):$/\1/p')
 cur=$(powerprofilesctl get)
 for i in "${!profiles[@]}"; do [[ ${profiles[$i]} == "$cur" ]] && next=${profiles[$(( (i + 1) % ${#profiles[@]} ))]}; done

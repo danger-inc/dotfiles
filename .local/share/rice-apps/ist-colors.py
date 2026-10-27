@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# Schreibt die Farben der Suite-Auswahl (istheme.resolve) für Leiste und Terminal nach ~/.cache/ist/:
-#   colors.css         – Waybar (und alles, was GTK-CSS-Farben liest)
-#   colors-kitty.conf  – Kitty (kitty.conf bindet sie ein), danach die 161-Logo-Farben
-# sowie für rofi, hyprlock, Fensterrahmen (Hyprland) und btop, und lädt alles neu, was sich geändert hat.
-#   ist-colors.py            einmal ausführen (auch aus apply-colors.sh nach matugen)
-#   ist-colors.py --watch    wartet auf Änderungen von ~/.config/ist-theme.json (Autostart)
+# Writes the colors of the suite choice (istheme.resolve) for bar and terminal to ~/.cache/ist/:
+#   colors.css         – waybar (and everything that reads GTK CSS colors)
+#   colors-kitty.conf  – kitty (kitty.conf includes it), then the 161 logo colors
+# as well as for rofi, hyprlock, window borders (Hyprland) and btop, and reloads everything that changed.
+#   ist-colors.py            run once (also from apply-colors.sh after matugen)
+#   ist-colors.py --watch    waits for changes of ~/.config/ist-theme.json (autostart)
 import os
 import re
 import subprocess
@@ -23,7 +23,7 @@ BTOP_THEME = os.path.expanduser("~/.config/btop/themes/ist.theme")
 
 
 def mix(a, b, pct):
-    """pct % von a, Rest b."""
+    """pct % of a, remainder b."""
     ra, rb = istheme._rgb(a), istheme._rgb(b)
     return istheme._hex(*(x * pct / 100 + y * (100 - pct) / 100 for x, y in zip(ra, rb)))
 
@@ -31,14 +31,14 @@ def mix(a, b, pct):
 def kitty_conf(css, light):
     c = istheme.parse(css)
     bg, fg, pri, sec, ter = (c[k] for k in ("background", "foreground", "primary", "secondary", "tertiary"))
-    if light:   # Signalfarben, die auf hellem Grund lesbar bleiben
+    if light:   # signal colors that stay readable on a light background
         sig = {1: "#ba1a1a", 9: "#d32f2f", 2: "#2e7d32", 10: "#43934a", 3: "#8a6100", 11: "#a87a10"}
         c0, c7 = mix(fg, bg, 70), mix(fg, bg, 75)
     else:
         sig = {1: "#f2b8b5", 9: "#f9dedc", 2: "#a6d189", 10: "#b9e09f", 3: "#e5c890", 11: "#efd7a8"}
         c0, c7 = c.get("surface_container", bg), mix(fg, bg, 85)
     p = {0: c0, 4: pri, 5: ter, 6: sec, 7: c7, 8: c["outline"], 12: pri, 13: ter, 14: sec, 15: fg, **sig}
-    lines = ["# Automatisch erzeugt von ~/.local/share/rice-apps/ist-colors.py (Auswahl der Suite, hell/dunkel)",
+    lines = ["# Generated automatically by ~/.local/share/rice-apps/ist-colors.py (suite choice, light/dark)",
              f"foreground {fg}", f"background {bg}", f"cursor {pri}",
              f"selection_foreground {c['on_primary']}", f"selection_background {pri}", f"url_color {ter}", ""]
     lines += [f"color{i} {p[i]}" for i in range(16)]
@@ -101,7 +101,7 @@ def write(path, text):
 
 
 def _at():
-    """Gemeinsamer Umschaltzeitpunkt (Epoche) aus der Auswahldatei, 0 wenn keiner gesetzt ist."""
+    """Shared switch time (epoch) from the selection file, 0 if none is set."""
     try:
         import json
         with open(istheme.CONFIG, encoding="utf-8") as f:
@@ -111,8 +111,8 @@ def _at():
     return at if 0 < at - time.time() < 1.0 else 0.0
 
 
-# Vorlauf (s) vor dem Umschaltzeitpunkt, negativ = danach: Leiste, Rahmen und Terminal wechseln hart, die Apps blenden
-# über – darum springen sie zur Mitte der Überblendung (at + 0,16 s). Werte aus Videomessungen (60 fps) abgeglichen.
+# lead time (s) before the switch time, negative = after: bar, borders and terminal switch hard, the apps cross-fade
+# – so they jump to the middle of the cross-fade (at + 0.16 s). Values matched from video measurements (60 fps).
 LEAD_WAYBAR = -0.16
 LEAD_BORDER = -0.13
 LEAD_KITTY = -0.043
@@ -127,7 +127,7 @@ def _wait(t):
 def run(at=0.0):
     os.makedirs(OUT, exist_ok=True)
     css, light = istheme.resolve()
-    # Dunkel + Automatisch: matugens eigene Kitty-Datei unverändert (feinere Abstufungen als die Ableitung)
+    # dark + automatic: matugen's own kitty file unchanged (finer gradations than the derivation)
     kconf = None
     if istheme.load()["theme"] == "auto" and not light:
         try:
@@ -139,7 +139,7 @@ def run(at=0.0):
     changed_css = write(f"{OUT}/colors.css", css)
     write(f"{OUT}/colors-kitty.conf", kconf)
     c = istheme.parse(css)
-    stock = istheme.load()["theme"] == "auto" and not light   # Dunkel + Automatisch: matugens Dateien unverändert
+    stock = istheme.load()["theme"] == "auto" and not light   # dark + automatic: matugen's files unchanged
 
     def pick(name, fallback):
         if stock:
@@ -157,9 +157,9 @@ def run(at=0.0):
                                       encoding="utf-8").read() if stock else btop_theme(c, light))
     except OSError:
         pass
-    # Dateien sind geschrieben; die sichtbaren Auslöser kommen gestaffelt, damit alles zum Zeitpunkt `at` erscheint
+    # files are written; the visible triggers come staggered so everything appears at the time `at`
     steps = []
-    if changed_css:   # Waybar lädt nur bei echter Inhaltsänderung des Stylesheets neu
+    if changed_css:   # waybar only reloads when the stylesheet content really changed
         def waybar():
             try:
                 s = open(WAYBAR_CSS, encoding="utf-8").read()
@@ -169,7 +169,7 @@ def run(at=0.0):
                 pass
             subprocess.call(["swaync-client", "-rs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         steps.append((LEAD_WAYBAR, waybar))
-    if border and "--no-reload" not in sys.argv:   # apply-colors.sh lädt Hyprland selbst
+    if border and "--no-reload" not in sys.argv:   # apply-colors.sh reloads Hyprland itself
         steps.append((LEAD_BORDER, lambda: subprocess.call(["hyprctl", "reload"], stdout=subprocess.DEVNULL,
                                                            stderr=subprocess.DEVNULL)))
     steps.append((LEAD_KITTY, lambda: subprocess.call(["pkill", "-USR1", "-x", "kitty"])))

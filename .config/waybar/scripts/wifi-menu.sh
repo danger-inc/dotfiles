@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Kleines WLAN-Menü für Waybar (Linksklick auf das Netzwerk-Modul).
-# Ersetzt das Kontextmenü von nm-applet.
+# Small wifi menu for waybar (left click on the network module).
+# Replaces the context menu of nm-applet.
 
 source "$HOME/.config/waybar/scripts/menu-lib.sh"
 menu_toggle_guard wifi
@@ -14,7 +14,7 @@ menu() {
         "$@"
 }
 
-# Verbindet im Hintergrund und meldet das Ergebnis als Benachrichtigung.
+# Connects in the background and reports the result as a notification.
 # Aufruf: run "Erfolgsmeldung" befehl arg...
 run() {
     setsid -f bash -c '
@@ -33,7 +33,7 @@ if [[ $(nmcli radio wifi) == "enabled" ]]; then
     entries+=("$label")
     actions[$label]="toggle-off"
 
-    # Verbundenes Netz vorab bestimmen (mehrere Access Points können dieselbe SSID haben)
+    # determine the connected network beforehand (several access points can share the same SSID)
     current=$(nmcli -t --escape no -f IN-USE,SSID dev wifi list --rescan no | sed -n 's/^\*://p' | head -n1)
 
     declare -A seen
@@ -62,7 +62,7 @@ if [[ $(nmcli radio wifi) == "enabled" ]]; then
         entries+=("$label")
     done < <(nmcli -t --escape no -f IN-USE,SIGNAL,SECURITY,SSID dev wifi list --rescan no)
 
-    # Liste sofort aus dem Cache zeigen, im Hintergrund für das nächste Öffnen neu scannen
+    # show the list immediately from the cache, rescan in the background for the next open
     setsid -f nmcli device wifi rescan >/dev/null 2>&1
 else
     label="󰤨  turn wi-fi on"
@@ -91,7 +91,7 @@ case ${actions[$choice]} in
         ;;
     connect)
         if nmcli -t -f NAME connection show | grep -Fxq -- "$ssid"; then
-            # Gespeichertes Netz: Passwort ist schon hinterlegt
+            # saved network: the password is already stored
             run "Verbunden mit $ssid" nmcli connection up id "$ssid"
         elif [[ -n ${secured[$choice]} ]]; then
             pw=$(menu --password --prompt "password for $ssid" --lines 1 </dev/null)

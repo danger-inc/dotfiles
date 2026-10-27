@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Waybar im Vollbild verstecken und beim Berühren des oberen Bildschirmrands einblenden.
-Waybar liegt auf der Overlay-Ebene (über Vollbildfenstern); ausserhalb des Vollbilds bleibt sie
-normal sichtbar und reserviert ihren Platz. Sichtbarkeit wird per SIGUSR1 umgeschaltet, der Zustand
-hier mitgezählt (bei neuem Waybar-Prozess zurück auf „sichtbar“)."""
+"""Hide waybar in fullscreen and show it when the top screen edge is touched.
+Waybar is on the overlay layer (above fullscreen windows); outside fullscreen it stays
+visible as usual and reserves its space. Visibility is toggled via SIGUSR1, the state is
+counted here (back to "visible" for a new waybar process)."""
 import json, os, sys, select, signal, socket, subprocess, time
 
 RT = os.environ["XDG_RUNTIME_DIR"]
 HIS = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
 BASE = f"{RT}/hypr/{HIS}"
-EDGE = 1       # Pixel vom oberen Rand, ab dem eingeblendet wird
-LEAVE = 80     # darunter wieder ausblenden (Leiste: 10 Rand + 46 Höhe)
+EDGE = 1       # pixels from the top edge from which it is shown
+LEAVE = 80     # below that hide again (bar: 10 margin + 46 height)
 
 
 def hypr(cmd):
@@ -39,7 +39,7 @@ def set_shown(want):
     if cur and shown != want:
         os.kill(cur, signal.SIGUSR1)
         shown = want
-        # Leiste da: Fenster darunter (Modus „maximiert“, die App merkt nichts); sonst echtes Vollbild
+        # bar present: window below it (mode "maximized", the app notices nothing); otherwise real fullscreen
         if fs:
             hypr("dispatch hl.dsp.window.fullscreen_state({internal=%d, client=2})" % (1 if want else 2))
 
@@ -51,7 +51,7 @@ def fullscreen():
         return False
 
 
-# Menüs/Karten aus der Waybar (Layer-Flächen, öffnen kein Fenster): beenden das Vollbild
+# menus/cards from the waybar (layer surfaces, open no window): end the fullscreen
 MENUS = {"wofi", "rofi", "volume-mixer", "swaync-control-center", "logout_dialog"}
 
 
@@ -82,7 +82,7 @@ while True:
         data = ev.recv(65536)
         if not data:
             break
-        # Neues Fenster (auch ein wieder eingeblendetes, z. B. rice-netz) oder Menü-Fläche beendet das Vollbild
+        # a new window (also a re-shown one, e.g. rice-netz) or menu surface ends the fullscreen
         if fs and any((l.startswith("openlayer>>") and l[11:] in MENUS) or l.startswith("openwindow>>")
                       for l in data.decode(errors="replace").splitlines()):
             leave_fullscreen()

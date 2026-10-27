@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# Unsichtbare Fläche über allen Fenstern, aber unter der Waybar, solange ein Menü offen ist
-# (wofi: WLAN/Bluetooth, rofi: Super+R). Ein Klick darauf schließt nur das Menü und erreicht
-# kein Fenster. Die Waybar bleibt frei: ihre Fläche ist "exclusive" und wird ausgespart.
-# Beendet sich von selbst, sobald kein Menü mehr offen ist.
+# Invisible surface above all windows but below the waybar while a menu is open
+# (wofi: wifi/bluetooth, rofi: Super+R). A click on it only closes the menu and reaches
+# no window. The waybar stays free: its surface is "exclusive" and is left out.
+# Exits by itself as soon as no menu is open any more.
 import subprocess, time
 import gi
 gi.require_version("Gtk", "3.0")
@@ -29,7 +29,7 @@ GtkLayerShell.set_namespace(win, "click-catcher")
 GtkLayerShell.set_layer(win, GtkLayerShell.Layer.TOP)
 for edge in (GtkLayerShell.Edge.TOP, GtkLayerShell.Edge.BOTTOM, GtkLayerShell.Edge.LEFT, GtkLayerShell.Edge.RIGHT):
     GtkLayerShell.set_anchor(win, edge, True)
-GtkLayerShell.set_exclusive_zone(win, 0)       # 0 = Waybar-Bereich aussparen
+GtkLayerShell.set_exclusive_zone(win, 0)       # 0 = leave out the waybar area
 GtkLayerShell.set_keyboard_mode(win, GtkLayerShell.KeyboardMode.NONE)
 
 win.set_app_paintable(True)
@@ -38,7 +38,7 @@ win.connect("draw", lambda w, cr: (cr.set_source_rgba(0, 0, 0, 0), cr.set_operat
 win.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 win.connect("button-press-event", close_menus)
 
-# Erst warten, bis das Menü da ist (max. 2 s), danach beenden, sobald es weg ist
+# first wait until the menu is there (max. 2 s), then exit as soon as it is gone
 start = time.monotonic()
 def watch():
     if menu_open():

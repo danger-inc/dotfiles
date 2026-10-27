@@ -1,5 +1,5 @@
-# btop-Farben aus dem aktuellen Wallpaper (matugen). Nicht von Hand bearbeiten,
-# Vorlage: ~/.config/matugen/templates/btop.theme
+# btop colors from the current wallpaper (matugen). Do not edit by hand,
+# template: ~/.config/matugen/templates/btop.theme
 theme[main_bg]="#121318"
 theme[main_fg]="#e2e2e9"
 theme[title]="#aec6ff"
@@ -15,7 +15,7 @@ theme[mem_box]="#bfc6dc"
 theme[net_box]="#dfbbde"
 theme[proc_box]="#aec6ff"
 theme[div_line]="#44474f"
-# Verläufe: ruhig -> Akzent -> Warnfarbe bei hoher Last
+# gradients: calm -> accent -> warning color at high load
 theme[temp_start]="#bfc6dc"
 theme[temp_mid]="#aec6ff"
 theme[temp_end]="#ffb4ab"

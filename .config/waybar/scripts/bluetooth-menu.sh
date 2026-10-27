@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Kleines Bluetooth-Menü für Waybar (Linksklick auf das Bluetooth-Modul).
-# Ersetzt das Kontextmenü des Blueman-Tray-Icons.
+# Small bluetooth menu for waybar (left click on the bluetooth module).
+# Replaces the context menu of the blueman tray icon.
 
 source "$HOME/.config/waybar/scripts/menu-lib.sh"
 menu_toggle_guard bluetooth

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# audio – Ersatz für pavucontrol (Rechtsklick auf den Lautsprecher in der Waybar).
-# Tabs: ¹wiedergabe (Apps: Lautstärke, Ausgabegerät, Pegel) ²aufnahme (Apps am Mikrofon)
-#       ³ausgabe / ⁴eingabe (Geräte: Standard, Anschluss, Lautstärke bis 150 %, Pegel) ⁵karten (Profile).
-# Live über "pactl subscribe"; Pegel über parec (nur für den sichtbaren Tab, solange das Fenster offen ist).
+# audio – replacement for pavucontrol (right click on the speaker in the waybar).
+# Tabs: ¹wiedergabe (apps: volume, output device, level) ²aufnahme (apps on the microphone)
+#       ³ausgabe / ⁴eingabe (devices: default, port, volume up to 150 %, level) ⁵karten (profiles).
+# Live via "pactl subscribe"; levels via parec (only for the visible tab while the window is open).
 import array, json, math, os, signal, subprocess, sys, threading, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -54,7 +54,7 @@ def vol_glyph(vol, muted):
 
 
 def snapshot():
-    """Alles auf einmal aus PipeWire holen (im Hintergrund-Thread)."""
+    """Fetch everything from PipeWire at once (in the background thread)."""
     return {
         "default_sink": pactl("get-default-sink").strip(),
         "default_source": pactl("get-default-source").strip(),
@@ -74,7 +74,7 @@ def is_own(stream):
 
 # ---------- Pegel ----------
 class Peak:
-    """Ein parec-Prozess, der laufend den Spitzenpegel (0–100, logarithmisch) misst."""
+    """One parec process that continuously measures the peak level (0–100, logarithmic)."""
 
     def __init__(self, device, stream=None):
         cmd = ["parec", "--raw", "--format=s16le", "--rate=8000", "--channels=1", "--latency-msec=30",
@@ -96,7 +96,7 @@ class Peak:
             self.level = max(lvl, self.level)
 
     def take(self):
-        """Wert zum Anzeigen; fällt danach sanft ab."""
+        """Value to display; then falls off smoothly."""
         v = self.level
         self.level = max(0.0, v - 6)
         return v
@@ -110,11 +110,11 @@ class Peak:
 
 # ---------- Bausteine ----------
 class VolumeLine(Gtk.Box):
-    """󰕾 ■■■■■■■■····│···  64%   + optional Pegelzeile darunter."""
+    """󰕾 ■■■■■■■■····│···  64%   + optional level line below."""
 
     def __init__(self, setter, muter, maximum=150, glyphs=None, peak=True):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        self.glyphs = glyphs  # (normal, stumm) oder None = Lautsprecher je nach Stufe
+        self.glyphs = glyphs  # (normal, muted) or None = speaker depending on the level
         self.mute = Gtk.Button(tooltip_text="Stumm an/aus (m)")
         self.mute.add_css_class("flat")
         self.mute.add_css_class("big")
@@ -225,7 +225,7 @@ class AudioWindow(tui.TuiWindow):
             time.sleep(2)
 
     def schedule(self):
-        if not self.get_visible():  # versteckt: beim nächsten Öffnen neu laden
+        if not self.get_visible():  # hidden: reload on next open
             return False
         if self.refresh_id is None:
             self.refresh_id = GLib.timeout_add(50, self.refresh)
@@ -297,7 +297,7 @@ class AudioWindow(tui.TuiWindow):
 
         tui.sync_rows(lst, streams, lambda i: i["index"], make, update)
 
-    # ---------- Geräte ----------
+    # ---------- devices ----------
     def fill_devices(self, tid, devs, default, output):
         lst, _ = self.pages[tid]
         self._set_empty(tid, devs)

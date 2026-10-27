@@ -1,4 +1,4 @@
-# Pfad relativ zu ~   (wird von sync.sh geholt und von install.sh verlinkt)
+# path relative to ~   (fetched by sync.sh and linked by install.sh)
 .config/hypr
 .config/kitty
 .config/btop
@@ -15,7 +15,7 @@
 .local/share/rice-apps/istheme.py
 .local/share/rice-apps/ist-swipe.py
 .local/bin/ist-darkmode
-# eigene Hilfsprogramme (Waybar-Menüs, Lautstärke-Anzeige, Cursor, wofi-Fokus-Fix). Brauchen tui.py/glass.py aus einer der -ist-Apps.
+# own helper programs (waybar menus, volume display, cursor, wofi focus fix). They need tui.py/glass.py from one of the -ist apps.
 .local/share/rice-apps/rice_i18n.py
 .local/share/rice-apps/rice-i18n-en.json
 .local/share/rice-apps/ricetui.py

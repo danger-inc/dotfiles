@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# fastfetch mittig im Fenster, Layout passend zur Fensterbreite, damit nichts umbricht:
-#   breit  -> Logo links, Infos rechts
-#   mittel -> Logo oben, Infos darunter
-#   schmal -> nur Infos
-# Logo: make-logo.py (Farben: Kitty-Palette 17-26 aus kitty-colors.sh), siehe config.jsonc.
+# fastfetch centered in the window, layout matching the window width so nothing wraps:
+#   wide   -> logo left, info right
+#   medium -> logo on top, info below
+#   narrow -> info only
+# Logo: make-logo.py (colors: kitty palette 17-26 from kitty-colors.sh), see config.jsonc.
 dir=~/.config/fastfetch
 
-# Sichtbare Breite: Farbcodes entfernen, Spaltensprünge (ESC[nG) von fastfetch mitrechnen
+# visible width: strip color codes, count fastfetch's column jumps (ESC[nG)
 width() {
     perl -CSD -ne 's/\e\[[0-9;]*m|\e\[\?7[lh]//g; chomp;
         $w = /^(.*)\e\[(\d+)G(.*)$/ ? $2 - 1 + length($3) : length($_);

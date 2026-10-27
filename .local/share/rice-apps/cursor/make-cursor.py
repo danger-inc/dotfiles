@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Cursor-Theme „ist-punkt“ (Punkt mit Ring) in der aktuellen matugen-Farbe bauen.
+"""Build the cursor theme "ist-punkt" (dot with ring) in the current matugen color.
 
-Gebaut wird abwechselnd nach ~/.local/share/icons/ist-punkt-a und -b: so ist jedes
-Umfärben für Hyprland ein echter Theme-Wechsel (gleicher Name wird gecacht).
-~/.local/share/icons/ist-punkt zeigt als Link auf den aktuellen; nur diesen Namen
-sehen Apps (gsettings), damit GTK nie live neu lädt.
+It is built alternately into ~/.local/share/icons/ist-punkt-a and -b: so every
+recolor is a real theme change for Hyprland (the same name gets cached).
+~/.local/share/icons/ist-punkt links to the current one; apps only
+see this name (gsettings), so GTK never reloads live.
 Inhalt:
-  - hyprcursor (SVG, scharf bei jeder Skalierung) für Hyprland
-  - XCursor (PNG-Größen 24–72) für GTK/X11-Apps
-Aufruf: make-cursor.py [--apply]   (--apply setzt den Cursor sofort)
-Wird von ~/.config/hypr/scripts/apply-colors.sh (Super+W) aufgerufen.
+  - hyprcursor (SVG, sharp at any scale) for Hyprland
+  - XCursor (PNG sizes 24–72) for GTK/X11 apps
+Usage: make-cursor.py [--apply]   (--apply sets the cursor immediately)
+Called by ~/.config/hypr/scripts/apply-colors.sh (Super+W).
 """
 import json, os, re, shutil, struct, subprocess, sys, tempfile
 
@@ -25,16 +25,16 @@ COLORS = os.path.join(HOME, ".cache/matugen/colors.css")
 CONFIG = os.path.join(HOME, ".config/ist-cursor/config.json")
 XSIZES = (24, 32, 36, 48, 64, 72)
 
-# Einstellungen (Scourge → system & hardware → Cursor schreibt CONFIG)
+# settings (Scourge → system & hardware → Cursor writes CONFIG)
 DEFAULTS = {
-    "scale": 1.3,        # Formen um die Mitte vergrößern (32er-Raster bleibt)
+    "scale": 1.3,        # enlarge shapes around the center (32 grid stays)
     "color": "primary",  # primary | secondary | tertiary | neutral | custom
-    "custom": "#8fcef3", # nur bei color = custom
-    "ring": 0.55,        # Deckkraft des Rings um den Punkt (0 = kein Ring)
-    "outline": 1.0,      # Stärke der dunklen Kontur (0 = keine)
-    "dot": 3.6,          # Radius des Mittelpunkts
-    "link": 6.5,         # Radius des Rings über Links
-    "wait_ms": 260,      # Bildwechsel der Warte-Punkte
+    "custom": "#8fcef3", # only with color = custom
+    "ring": 0.55,        # opacity of the ring around the dot (0 = no ring)
+    "outline": 1.0,      # strength of the dark outline (0 = none)
+    "dot": 3.6,          # radius of the center dot
+    "link": 6.5,         # radius of the ring over links
+    "wait_ms": 260,      # frame change of the wait dots
 }
 COLOR_SOURCES = ["primary", "secondary", "tertiary", "neutral", "custom"]
 
@@ -84,7 +84,7 @@ def colors(cfg=None):
     return pal.get(src, pal["primary"]), pal["background"]
 
 
-# ---------- Formen (32er-Raster, Hotspot jeweils Mitte) ----------
+# ---------- shapes (32 grid, hotspot always the center) ----------
 
 def shapes(c, k, cfg=None):
     cfg = cfg or load_config()
@@ -100,13 +100,13 @@ def shapes(c, k, cfg=None):
     ring = (f"<circle cx='16' cy='16' r='{ring_r}' fill='{k}' fill-opacity='{round(R * .64, 2)}' stroke='{c}' stroke-opacity='{R}' stroke-width='1.2'/>"
             if R > 0 else "")
     base = ring + dot(16, 16, D)
-    # Kleine Plakette unten rechts für Sonderzeiger (Hilfe, Kopieren …)
+    # small badge at the bottom right for special pointers (help, copy …)
     badge = lambda inner: base + f"<circle cx='24.5' cy='24.5' r='5' fill='{k}' stroke='{c}' stroke-width='1.2'/>" + inner
 
-    def axis(pts):  # Mittelpunkt + zwei Punkte entlang einer Achse (Größe ändern)
+    def axis(pts):  # center + two dots along an axis (resize)
         return dot(16, 16, round(D * .9, 2)) + "".join(dot(x, y, 2.1, 1) for x, y in pts)
 
-    def wait(lit):  # drei Punkte, füllen sich von links nach rechts
+    def wait(lit):  # three dots, filling from left to right
         return "".join(dot(9 + i * 7, 16, 2.8, 1, 1 if i < lit else .28) for i in range(3))
 
     S = {
@@ -144,7 +144,7 @@ def shapes(c, k, cfg=None):
     return S
 
 
-# Alle Namen, unter denen Apps die Formen anfragen (CSS/cursor-shape-v1 und alte X11-Namen)
+# all names under which apps request the shapes (CSS/cursor-shape-v1 and old X11 names)
 ALIASES = {
     "default": ["left_ptr", "arrow", "top_left_arrow", "left_arrow", "right_ptr", "draft_large", "draft_small", "center_ptr", "x-cursor", "X_cursor"],
     "pointer": ["hand", "hand1", "hand2", "pointing_hand", "e29285e634086352946a0e7090d73106", "9d800788f1b08800ae810202380a0822"],
@@ -259,7 +259,7 @@ def build():
         os.rename(new, OUT)
         link = os.path.join(ICONS, NAME)
         if os.path.isdir(link) and not os.path.islink(link):
-            shutil.rmtree(link)  # alte Einzelordner-Version
+            shutil.rmtree(link)  # old single-folder version
         tmp_link = link + ".tmp"
         if os.path.lexists(tmp_link):
             os.remove(tmp_link)
@@ -271,19 +271,19 @@ def build():
 
 
 def apply(slot):
-    # Hyprland zeichnet fast alle Cursor selbst (Apps fordern per cursor-shape-Protokoll nur
-    # eine Form an) – darum genügt es, Hyprland das neue Theme zu geben. Der Name wechselt
-    # (a/b), weil Hyprland denselben Namen nicht neu einliest.
+    # Hyprland draws almost all cursors itself (apps only request a shape via the
+    # cursor-shape protocol) – so it is enough to give Hyprland the new theme. The name alternates
+    # (a/b) because Hyprland does not re-read the same name.
     subprocess.run(["hyprctl", "setcursor", slot, "24"], stdout=subprocess.DEVNULL)
-    # Apps sehen dauerhaft nur den Link „ist-punkt“. Würde der gsettings-Name bei jedem Umfärben
-    # wechseln, lädt GTK3 sein Theme live neu – und Waybar stürzt danach beim nächsten Hovern ab
-    # (GTK3-Bug mit verwaisten Cursorn bei Skalierung 2, Coredump 2026-10-19 13:04).
-    # Neu gestartete Apps lesen über den Link automatisch die aktuelle Farbe.
+    # Apps permanently see only the link "ist-punkt". If the gsettings name changed on every
+    # recolor, GTK3 would reload its theme live – and waybar crashes afterwards on the next hover
+    # (GTK3 bug with orphaned cursors at scale 2, coredump 2026-10-19 13:04).
+    # Newly started apps automatically read the current color through the link.
     key = ["org.gnome.desktop.interface", "cursor-theme"]
     cur = subprocess.run(["gsettings", "get", *key], capture_output=True, text=True).stdout.strip().strip("'")
     if cur != NAME:
         subprocess.run(["gsettings", "set", *key, NAME], stderr=subprocess.DEVNULL)
-    # Sichtbaren Cursor sofort neu zeichnen, ohne ihn auszublenden (Details in refresh.py).
+    # redraw the visible cursor immediately without hiding it (details in refresh.py).
     subprocess.Popen([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "refresh.py")],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
 

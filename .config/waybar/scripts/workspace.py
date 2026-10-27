@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# Workspace-Button für Waybar: ein Aufruf pro Workspace-Nummer.
-# Ersetzt hyprland/workspaces, weil dessen Klick noch das alte
-# "dispatch workspace N" schickt, das Hyprland im Lua-Modus ablehnt.
-#   workspace.py N          -> gibt JSON aus, sobald sich der aktive Workspace ändert
-#   workspace.py N --go     -> wechselt zu Workspace N (für on-click)
+# Workspace button for waybar: one call per workspace number.
+# Replaces hyprland/workspaces because its click still sends the old
+# "dispatch workspace N", which Hyprland rejects in Lua mode.
+#   workspace.py N          -> prints JSON as soon as the active workspace changes
+#   workspace.py N --go     -> switches to workspace N (for on-click)
 import json, os, socket, subprocess, sys
 
 ws = sys.argv[1]

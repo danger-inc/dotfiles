@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Schreibt die Logo-Farben für "161" als Kitty-Palettenfarben 17-24 nach
-# ~/.cache/matugen/colors-kitty-161.conf (von kitty.conf eingebunden).
-# Weil das Logo Palettenfarben nutzt, färbt Kitty es bei Super+W live mit um.
-#   17-22 Verlauf primary -> tertiary, 23 Glanzkante, 24 Schlagschatten,
-#   25/26 Schattenkante hell/dunkel (primary mit background gemischt)
-# Aufruf aus ~/.config/hypr/scripts/apply-colors.sh nach matugen.
+# Writes the logo colors for "161" as kitty palette colors 17-24 to
+# ~/.cache/matugen/colors-kitty-161.conf (included by kitty.conf).
+# Because the logo uses palette colors, kitty recolors it live on Super+W.
+#   17-22 gradient primary -> tertiary, 23 highlight edge, 24 drop shadow,
+#   25/26 shadow edge light/dark (primary mixed with background)
+# Called from ~/.config/hypr/scripts/apply-colors.sh after matugen.
 colors=~/.cache/ist/colors.css
 out=~/.cache/matugen/colors-kitty-161.conf
 
@@ -21,7 +21,7 @@ a=$(hex primary) b=$(hex tertiary)
     done
     echo "color23 #$(hex foreground)"
     echo "color24 #$(hex color4)"
-    # primary Richtung background abdunkeln: mix <prozent-primary>
+    # darken primary towards background: mix <percent-primary>
     c=$(hex background)
     mix() {
         printf '#%02x%02x%02x\n' \

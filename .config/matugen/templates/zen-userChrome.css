@@ -1,5 +1,5 @@
-/* Automatisch erzeugt von matugen aus {{image}} – Vorlage: ~/.config/matugen/templates/zen-userChrome.css
-   Zen/Firefox lesen userChrome.css beim Start (Neustart des Browsers nach Super+W). */
+/* Generated automatically by matugen from {{image}} – template: ~/.config/matugen/templates/zen-userChrome.css
+   Zen/Firefox read userChrome.css at startup (restart the browser after Super+W). */
 :root {
   --ist-bg:      {{colors.surface.default.hex}};
   --ist-bg-alt:  {{colors.surface_container_high.default.hex}};
@@ -26,7 +26,7 @@
   --tab-selected-textcolor: var(--ist-accent) !important;
 }
 
-/* -ist-Look: flache Flächen, 1-px-Rahmen in Akzentfarbe, kleine Radien */
+/* -ist look: flat surfaces, 1 px borders in the accent color, small radii */
 #urlbar-background, #searchbar { border: 1px solid color-mix(in srgb, var(--ist-accent) 55%, transparent) !important;
   border-radius: 4px !important; box-shadow: none !important; }
 #urlbar[focused="true"] > #urlbar-background { border-color: var(--ist-accent) !important; }
@@ -34,7 +34,7 @@
   box-shadow: none !important; }
 menupopup, panel { --panel-border-radius: 4px; }
 
-/* 2-Finger-Wisch zurück/vor – Seitenstapel-Look der Suite: gestrichelter Rahmen mit Titel-Chip */
+/* 2-finger swipe back/forward – page stack look of the suite: dashed border with a title chip */
 #historySwipeAnimationPreviousArrow, #historySwipeAnimationNextArrow {
   background: var(--ist-bg-alt) !important;
   border: 1px dashed var(--ist-accent) !important;

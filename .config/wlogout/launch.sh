@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Öffnet wlogout mit 5 kompakten, mittig platzierten Karten.
-# Ein zweiter Klick auf den Power-Knopf schließt es wieder.
+# Opens wlogout with 5 compact, centered cards.
+# A second click on the power button closes it again.
 pkill -x wlogout && exit 0
 ~/.config/wlogout/make-icons.py
 
-card_w=118 card_h=216   # Kartengröße inkl. Rand (8px je Seite), logische Pixel
+card_w=118 card_h=216   # card size including border (8px per side), logical pixels
 read -r w h < <(hyprctl monitors -j | python3 -c '
 import json, sys
 m = next(m for m in json.load(sys.stdin) if m["focused"])

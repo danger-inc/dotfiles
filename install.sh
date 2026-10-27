@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Dotfiles installieren: Dateien nach ~ verlinken (bestehende wandern nach ~/.dotfiles-backup/<datum>).
-# Dateien mit @HOME@ werden gerendert (kopiert) statt verlinkt, weil Hyprland & Co. kein $HOME auflösen.
-#   ./install.sh            alles
-#   ./install.sh hypr kitty nur diese Bausteine (Name = Ordner unter .config)
-#   ./install.sh --dry-run  nur anzeigen
+# Install the dotfiles: link files into ~ (existing ones move to ~/.dotfiles-backup/<date>).
+# Files with @HOME@ are rendered (copied) instead of linked, because Hyprland & co. do not resolve $HOME.
+#   ./install.sh            everything
+#   ./install.sh hypr kitty only these parts (name = folder under .config)
+#   ./install.sh --dry-run  only show
 set -euo pipefail
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAMP=$(date +%Y-%m-%d_%H%M%S); BACKUP="$HOME/.dotfiles-backup/$STAMP"
@@ -19,7 +19,7 @@ wanted() {
     return 1
 }
 
-place() {                       # place <relativer Pfad>
+place() {                       # place <relative path>
     local rel="$1" from="$SRC/$1" to="$HOME/$1"
     if [[ -e "$to" || -L "$to" ]]; then
         [[ -f "$to" && ! -L "$to" ]] && ! grep -qI "@HOME@" "$from" && cmp -s "$from" "$to" && return
@@ -29,7 +29,7 @@ place() {                       # place <relativer Pfad>
     act "mkdir -p '$(dirname "$to")'"
     if grep -qI '@HOME@' "$from" 2>/dev/null; then
         act "sed 's|@HOME@|$HOME|g' '$from' > '$to' && chmod --reference='$from' '$to'"
-    elif [[ "$rel" == .local/* ]]; then   # die -ist-Apps überschreiben Dateien in rice-apps beim Update: kopieren statt verlinken
+    elif [[ "$rel" == .local/* ]]; then   # the -ist apps overwrite files in rice-apps on update: copy instead of link
         act "cp -p '$from' '$to'"
     else
         act "ln -s '$from' '$to'"
@@ -42,14 +42,14 @@ while read -r name _; do
     wanted "$name" || continue
     [[ -e "$SRC/$name" ]] || continue
     if [[ -d "$SRC/$name" ]]; then
-        # Ordner: jede Datei einzeln, damit lokale Zusatzdateien (Caches, Wallpaper …) im Ziel bleiben
+        # folder: each file on its own, so local extra files (caches, wallpapers …) stay in the target
         while read -r f; do place "$name/${f#./}"; done < <(cd "$SRC/$name" && find . -type f)
     else
         place "$name"
     fi
 done < "$SRC/links.txt"
 
-# Zen-Browser: Theme-Abschnitt in der matugen-Config nur aktivieren, wenn ein Zen-Profil existiert
+# Zen browser: only enable the theme section in the matugen config if a Zen profile exists
 M="$HOME/.config/matugen/config.toml"
 if [[ -f "$M" ]] && grep -q '^#ZEN# ' "$M" && wanted ".config/matugen"; then
     Z=$(sed -n '/^\[Install/,/^$/s/^Default=//p' "$HOME/.config/zen/profiles.ini" 2>/dev/null | head -1 || true)
@@ -58,7 +58,7 @@ if [[ -f "$M" ]] && grep -q '^#ZEN# ' "$M" && wanted ".config/matugen"; then
     else echo "Zen browser not found – zen theme skipped (section [templates.zen] in ~/.config/matugen/config.toml)"; fi
 fi
 
-# wofi-Fokus-Fix (LD_PRELOAD) bauen
+# build the wofi focus fix (LD_PRELOAD)
 W="$HOME/.local/share/rice-apps/wofi-ondemand"
 if [[ -f "$W/wofi-ondemand.c" ]] && wanted ".local/share/rice-apps/wofi-ondemand"; then
     if command -v gcc >/dev/null; then act "gcc -shared -fPIC -O2 -o '$W/wofi-ondemand.so' '$W/wofi-ondemand.c'"

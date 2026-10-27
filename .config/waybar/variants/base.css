@@ -8,5 +8,5 @@ tooltip label { color: @foreground; }
 #tray.empty { background: transparent; border: none; padding: 0; margin: 0; }
 #custom-separator { color: alpha(@primary, 0.6); font-size: 20px; padding: 0 2px; background: transparent; }
 #custom-separator:hover { color: @primary; }
-/* ⏻ ist in der Mono-Schrift breiter als sein Platz (ragte 4 px nach rechts) – Propo gibt ihm volle Breite */
+/* ⏻ is wider than its space in the mono font (stuck out 4 px to the right) – Propo gives it full width */
 #custom-power { font-family: "JetBrainsMono Nerd Font Propo"; padding-left: 11px; padding-right: 11px; }

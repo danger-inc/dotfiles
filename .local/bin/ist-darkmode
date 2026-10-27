@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Hell/Dunkel der ganzen Suite umschalten (Super+Shift+W): Scanbalken-Animation (Einstellungen: Design-Auswahl jeder App),
-# sonst alle Fenster im selben Moment ("at" in ~/.config/ist-theme.json).
+# Toggle light/dark for the whole suite (Super+Shift+W): scan-bar animation (settings: design choice of each app),
+# otherwise all windows at the same moment ("at" in ~/.config/ist-theme.json).
 exec python3 -c '
 import sys, os
 sys.path.insert(0, os.path.expanduser("~/.local/share/rice-apps"))

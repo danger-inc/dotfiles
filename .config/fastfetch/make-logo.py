@@ -1,32 +1,32 @@
 #!/usr/bin/env python3
-# Erzeugt ~/.config/fastfetch/161.txt: "161" als Halbton mit Glitch.
-#   - Ziffern aus der schmalen Schrift Anton, abgetastet als Punkte (● groß, • klein)
-#   - Punkte werden nach unten etwas kleiner, Farbverlauf primary -> tertiary
-#   - Glitch: einzelne Zeilen verrutscht, Farbsaum an den Außenkanten (links dunkel, rechts hell)
-# Fertige ANSI-Datei, fastfetch zeigt sie mit "file-raw" (siehe config.jsonc).
-# Farben: Kitty-Palette 17-26 aus kitty-colors.sh, färbt sich bei Super+W live mit um.
-# Neu erzeugen: python3 ~/.config/fastfetch/make-logo.py
+# Creates ~/.config/fastfetch/161.txt: "161" as a halftone with glitch.
+#   - digits from the narrow font Anton, sampled as dots (● large, • small)
+#   - dots get a bit smaller towards the bottom, color gradient primary -> tertiary
+#   - glitch: single rows shifted, color fringe on the outer edges (dark left, light right)
+# Finished ANSI file, fastfetch shows it with "file-raw" (see config.jsonc).
+# Colors: kitty palette 17-26 from kitty-colors.sh, recolors live on Super+W.
+# Regenerate: python3 ~/.config/fastfetch/make-logo.py
 import os, subprocess
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 TEXT = "161"
-COLS, ROWS = 30, 10          # Größe der Ziffern in Terminalzellen
-GAP = 0.12                   # Abstand zwischen den Ziffern (Anteil der Ziffernhöhe)
-DOTS = "•●"                  # klein -> groß
-FALL = 0.35                  # wie stark die Punkte nach unten kleiner werden
-THRESH = 0.33                # ab welcher Deckung eine Zelle einen Punkt bekommt
-SHIFTS = {3: 1, 7: -1}       # Glitch: Zeile -> Versatz in Spalten
+COLS, ROWS = 30, 10          # size of the digits in terminal cells
+GAP = 0.12                   # gap between the digits (fraction of the digit height)
+DOTS = "•●"                  # small -> large
+FALL = 0.35                  # how much smaller the dots get towards the bottom
+THRESH = 0.33                # coverage from which a cell gets a dot
+SHIFTS = {3: 1, 7: -1}       # glitch: row -> offset in columns
 SUBLINE = "\U000F08C7  A R C H   L I N U X"
 
-GRAD = [17, 18, 19, 20, 21, 22]   # Verlauf
-SHINE, DEEP = 23, 26              # heller / dunkler Saum, Linie
+GRAD = [17, 18, 19, 20, 21, 22]   # gradient
+SHINE, DEEP = 23, 26              # lighter / darker fringe, line
 E = "\033["
 
 font_file = subprocess.run(["fc-match", "-f", "%{file}", "Anton"], capture_output=True, text=True).stdout
 font = ImageFont.truetype(font_file, 400)
 
-# Ziffern einzeln setzen und auf COLS x ROWS abtasten (Graustufen = Deckung pro Zelle)
+# set the digits one by one and sample them to COLS x ROWS (gray levels = coverage per cell)
 parts = []
 for ch in TEXT:
     im = Image.new("L", (900, 900), 0)
@@ -43,7 +43,7 @@ for p in parts:
     cover[:, xi:xi + pw] = a[:, :max(0, min(pw, COLS - xi))]
     x += pw + GAP * ph * scale
 
-W = COLS + 4                 # Platz für Versatz und Saum
+W = COLS + 4                 # room for offset and fringe
 cells = [[None] * W for _ in range(ROWS)]
 for y in range(ROWS):
     for x in range(COLS):
@@ -54,7 +54,7 @@ for y in range(ROWS):
         t = (y / (ROWS - 1) * 0.75 + x / (COLS - 1) * 0.25) * (len(GRAD) - 1)
         cells[y][x + 2 + SHIFTS.get(y, 0)] = (dot, f"38;5;{GRAD[min(5, int(t))]}")
 
-# Farbsaum nur an Außenkanten (zwei freie Zellen daneben), damit das Loch der 6 frei bleibt
+# color fringe only on outer edges (two free cells next to it), so the hole of the 6 stays free
 for y in range(ROWS):
     row = cells[y][:]
     for x in range(W):
@@ -78,7 +78,7 @@ for row in cells:
         s += c[0]
     lines.append(s.rstrip() + f"{E}0m")
 
-sub_w = len(SUBLINE) + 1     # Arch-Symbol ist breiter
+sub_w = len(SUBLINE) + 1     # the Arch symbol is wider
 lines += ["", f"{E}38;5;{SHINE}m" + "━" * W + f"{E}0m",
           f"{E}35m" + " " * ((W - sub_w) // 2) + SUBLINE + f"{E}0m"]
 path = os.path.expanduser("~/.config/fastfetch/161.txt")

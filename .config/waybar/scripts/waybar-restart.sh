@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Waybar sauber (neu) starten – genutzt von Scourge (System → Waybar) und make-cursor.py.
-#   waybar-restart.sh            sofort neu starten (TERM, notfalls KILL, dann frisch starten)
-#   waybar-restart.sh --ensure   nur starten, wenn Waybar nicht läuft
-#   waybar-restart.sh --soon [s] entprellt neu starten (Standard 1,2 s; nur die letzte Anfrage zählt)
-# Ausgabe von Waybar landet in $XDG_RUNTIME_DIR/waybar.log.
+# Start waybar cleanly (again) – used by Scourge (System → Waybar) and make-cursor.py.
+#   waybar-restart.sh            restart immediately (TERM, KILL if needed, then start fresh)
+#   waybar-restart.sh --ensure   only start if waybar is not running
+#   waybar-restart.sh --soon [s] restart debounced (default 1.2 s; only the last request counts)
+# Waybar's output goes to $XDG_RUNTIME_DIR/waybar.log.
 RUN="${XDG_RUNTIME_DIR:-/tmp}"
 LOG="$RUN/waybar.log"
 TICKET="$RUN/waybar-restart.ticket"

@@ -28,7 +28,7 @@ hl.monitor({
     mode     = "preferred",
     position = "auto",
     scale    = "auto",
-    -- Platz der Waybar (10 Rand + 42 Höhe) fest reservieren, damit Fenster nicht springen, wenn sie ein-/ausgeblendet wird
+    -- Reserve space for waybar (10 margin + 42 height) so windows do not jump when it is shown/hidden
     reserved_area = { top = 52, right = 0, bottom = 0, left = 0 },
 })
 
@@ -39,8 +39,8 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "@HOME@/.local/bin/filist"   -- eigener Explorer (vorher thunar)
-local menu        = "@HOME@/.local/bin/inquirist"   -- inquirist: eigener Starter (vorher rofi, scripts/launcher.sh)
+local fileManager = "@HOME@/.local/bin/filist"   -- own explorer (formerly thunar)
+local menu        = "@HOME@/.local/bin/inquirist"   -- inquirist: own launcher (formerly rofi, scripts/launcher.sh)
 
 
 -------------------
@@ -51,38 +51,38 @@ local menu        = "@HOME@/.local/bin/inquirist"   -- inquirist: eigener Starte
 
 
 hl.on("hyprland.start", function ()
-    -- nm-applet ersetzt durch Waybar-Netzwerkmodul + ~/.config/waybar/scripts/wifi-menu.sh
+    -- nm-applet replaced by the waybar network module + ~/.config/waybar/scripts/wifi-menu.sh
     -- hl.exec_cmd("nm-applet")
     hl.exec_cmd("waybar")
     hl.exec_cmd("pidof swaync || swaync")   -- Benachrichtigungen + Panel
-    hl.exec_cmd("pidof hypridle || hypridle")   -- Idle-Sperre (10 min) und Sperre vor Standby
-    hl.exec_cmd("python3 @HOME@/.config/waybar/scripts/autohide-fullscreen.py")   -- Waybar im Vollbild nur am oberen Rand
-    hl.exec_cmd("@HOME@/.local/bin/volume-osd")   -- Lautstärke-Pille unten mittig
-    hl.exec_cmd("@HOME@/.config/waybar/scripts/volume-mixer.sh --daemon")   -- Mixer (Waybar-Linksklick), wartet im Hintergrund
-    hl.exec_cmd("@HOME@/.local/bin/rice-music --daemon")   -- Musik-Player (Super+M), wartet im Hintergrund
-    hl.exec_cmd("@HOME@/.local/bin/filist --daemon")   -- Explorer (Super+E) + Datei-Dialog für alle Apps, wartet im Hintergrund
-    hl.exec_cmd("@HOME@/.local/bin/notist --daemon")   -- notist vorladen: Fenster öffnet danach sofort
-    hl.exec_cmd("@HOME@/.local/bin/datist --daemon")   -- datist vorladen: Super+K öffnet danach sofort
-    hl.exec_cmd("@HOME@/.local/bin/scourge --daemon")   -- Scourge vorladen: Fenster und Dateien öffnen danach sofort
-    hl.exec_cmd("@HOME@/.local/bin/scourge-pdf --daemon")   -- scourge-pdf (schlanker PDF-Editor) vorladen
-    hl.exec_cmd("@HOME@/.local/bin/mailist --daemon")   -- mailist: gleicht Gmail im Hintergrund ab, Super+G öffnet sofort
-    hl.exec_cmd("@HOME@/.local/bin/sharist --daemon")   -- sharist: Quick Share, für Handys sichtbar; Super+D öffnet
-    hl.exec_cmd("@HOME@/.local/bin/inquirist --daemon")   -- Starter (Super+R), wartet im Hintergrund
-    hl.exec_cmd("@HOME@/.local/bin/linguist --daemon")  -- linguist: Übersetzer, Hover in der Bildschirmecke; Super+T öffnet
-    hl.exec_cmd("test -x @HOME@/.local/bin/divist && @HOME@/.local/bin/divist --daemon")    -- divist: Taschenrechner vorladen; Super+R → rechner öffnet ihn sofort
-    hl.exec_cmd("@HOME@/.local/bin/wallist --daemon")   -- wallist vorladen: öffnet sofort, „entdecken“ ist schon gefüllt
-    hl.exec_cmd("wl-paste --type text --watch cliphist store")    -- Zwischenablage-Verlauf (Starter → ablage, Super+Shift+V)
+    hl.exec_cmd("pidof hypridle || hypridle")   -- idle lock (10 min) and lock before standby
+    hl.exec_cmd("python3 @HOME@/.config/waybar/scripts/autohide-fullscreen.py")   -- waybar in fullscreen only at the top edge
+    hl.exec_cmd("@HOME@/.local/bin/volume-osd")   -- volume pill at the bottom center
+    hl.exec_cmd("@HOME@/.config/waybar/scripts/volume-mixer.sh --daemon")   -- mixer (waybar left click), waits in the background
+    hl.exec_cmd("@HOME@/.local/bin/rice-music --daemon")   -- music player (Super+M), waits in the background
+    hl.exec_cmd("@HOME@/.local/bin/filist --daemon")   -- explorer (Super+E) + file dialog for all apps, waits in the background
+    hl.exec_cmd("@HOME@/.local/bin/notist --daemon")   -- preload notist: the window opens instantly afterwards
+    hl.exec_cmd("@HOME@/.local/bin/datist --daemon")   -- preload datist: Super+K opens instantly afterwards
+    hl.exec_cmd("@HOME@/.local/bin/scourge --daemon")   -- preload Scourge: window and files open instantly afterwards
+    hl.exec_cmd("@HOME@/.local/bin/scourge-pdf --daemon")   -- preload scourge-pdf (slim PDF editor)
+    hl.exec_cmd("@HOME@/.local/bin/mailist --daemon")   -- mailist: syncs Gmail in the background, Super+G opens instantly
+    hl.exec_cmd("@HOME@/.local/bin/sharist --daemon")   -- sharist: Quick Share, visible to phones; Super+D opens it
+    hl.exec_cmd("@HOME@/.local/bin/inquirist --daemon")   -- launcher (Super+R), waits in the background
+    hl.exec_cmd("@HOME@/.local/bin/linguist --daemon")  -- linguist: translator, hover in the screen corner; Super+T opens it
+    hl.exec_cmd("test -x @HOME@/.local/bin/divist && @HOME@/.local/bin/divist --daemon")    -- divist: preload calculator; Super+R → rechner opens it instantly
+    hl.exec_cmd("@HOME@/.local/bin/wallist --daemon")   -- preload wallist: opens instantly, "discover" is already filled
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")    -- clipboard history (launcher → ablage, Super+Shift+V)
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
-    hl.exec_cmd("python3 @HOME@/.local/share/rice-apps/ricetui.py --daemon")   -- audio/netz/bluetooth (Waybar-Rechtsklick), wartet im Hintergrund
-    hl.exec_cmd("python3 @HOME@/.local/share/rice-apps/ist-colors.py --watch")   -- Waybar/Kitty-Farben folgen der Design-Auswahl (hell/dunkel)
-    hl.exec_cmd("@HOME@/.local/share/rice-apps/cursor/make-cursor.py --apply")   -- Punkt-Cursor in aktueller Farbe setzen
+    hl.exec_cmd("python3 @HOME@/.local/share/rice-apps/ricetui.py --daemon")   -- audio/netz/bluetooth (waybar right click), waits in the background
+    hl.exec_cmd("python3 @HOME@/.local/share/rice-apps/ist-colors.py --watch")   -- waybar/kitty colors follow the design choice (light/dark)
+    hl.exec_cmd("@HOME@/.local/share/rice-apps/cursor/make-cursor.py --apply")   -- set the dot cursor in the current color
     hl.exec_cmd("killall awww-daemon; sleep 2 && awww-daemon --no-cache &")
-    -- blueman-applet entfernt: doppeltes Bluetooth-Tray-Icon neben dem Waybar-Modul
+    -- blueman-applet removed: duplicate bluetooth tray icon next to the waybar module
     -- hl.exec_cmd("blueman-applet")
 
-    -- Zuletzt gewähltes Hintergrundbild wiederherstellen (Farben liegen schon in ~/.cache/matugen)
-    -- hyprpaper entfernt: lief doppelt unsichtbar hinter awww
-    hl.exec_cmd("sh -c 'sleep 2.5; until awww query >/dev/null 2>&1; do sleep 0.3; done; if [ -s ~/.cache/matugen/wallpaper ]; then awww img \"$(cat ~/.cache/matugen/wallpaper)\"; else ~/.config/hypr/random_wall.sh; fi'")   -- erster Start ohne Bild: Standard-Hintergrund + Farben erzeugen
+    -- restore the last chosen wallpaper (colors are already in ~/.cache/matugen)
+    -- hyprpaper removed: ran twice, invisible behind awww
+    hl.exec_cmd("sh -c 'sleep 2.5; until awww query >/dev/null 2>&1; do sleep 0.3; done; if [ -s ~/.cache/matugen/wallpaper ]; then awww img \"$(cat ~/.cache/matugen/wallpaper)\"; else ~/.config/hypr/random_wall.sh; fi'")   -- first start without an image: create default wallpaper + colors
 end)--   hl.exec_cmd("hyprpaper")
 --   hl.exec_cmd("waybar & hyprpaper & firefox")
 -- end)
@@ -96,9 +96,9 @@ end)--   hl.exec_cmd("hyprpaper")
 
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
--- Cursor „ist-punkt“ (Punkt mit Ring, matugen-Farbe; gebaut von rice-apps/cursor/make-cursor.py)
+-- cursor "ist-punkt" (dot with ring, matugen color; built by rice-apps/cursor/make-cursor.py)
 hl.env("XCURSOR_THEME", "ist-punkt")
--- Datei-Dialoge („Öffnen“/„Speichern unter“) über das Portal → filist (GTK4 bzw. GTK3)
+-- file dialogs ("Open"/"Save as") through the portal → filist (GTK4 or GTK3)
 hl.env("GDK_DEBUG", "portals")
 hl.env("GTK_USE_PORTAL", "1")
 
@@ -126,8 +126,8 @@ hl.env("GTK_USE_PORTAL", "1")
 ---- LOOK AND FEEL ----
 -----------------------
 
--- Fensterrahmen-Farben vom Hintergrundbild (matugen, siehe ~/.config/matugen).
--- Fallback ist der alte Blau-Türkis-Verlauf, falls die Datei fehlt.
+-- Window border colors from the wallpaper (matugen, see ~/.config/matugen).
+-- Fallback is the old blue-teal gradient if the file is missing.
 local ok, wallColors = pcall(dofile, "@HOME@/.cache/ist/colors-hyprland.lua")
 if not ok or type(wallColors) ~= "table" then
     wallColors = { active1 = "rgba(33ccffee)", active2 = "rgba(00ff99ee)", inactive = "rgba(595959aa)" }
@@ -261,7 +261,7 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,     -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = true,  -- If true disables the random hyprland logo / anime girl background. :(
-        on_focus_under_fullscreen = 2,   -- neues Fenster (z. B. aus der Waybar) beendet das Vollbild des alten
+        on_focus_under_fullscreen = 2,   -- a new window (e.g. from waybar) ends the fullscreen of the old one
     },
 })
 
@@ -281,7 +281,7 @@ hl.config({
         follow_mouse = 1,
 
         sensitivity = 0.0, -- -1.0 - 1.0, 0 means no modification.
-        accel_profile = "adaptive", -- rohe 1:1-Bewegung ohne Beschleunigungskurve (fühlt sich direkter an als "adaptive")
+        accel_profile = "adaptive", -- raw 1:1 movement without an acceleration curve (feels more direct than "adaptive")
 
         touchpad = {
             natural_scroll = false,
@@ -291,14 +291,14 @@ hl.config({
 
 hl.config({
     cursor = {
-        inactive_timeout  = 0,     -- Sekunden ohne Bewegung bis zum Ausblenden (0 = nie; Scourge → Cursor)
-        hide_on_key_press = false, -- beim Tippen ausblenden
+        inactive_timeout  = 0,     -- seconds without movement until hiding (0 = never; Scourge → Cursor)
+        hide_on_key_press = false, -- hide while typing
     },
 })
 
 hl.config({
     gestures = {
-        workspace_swipe_use_r      = true, -- r-1/r+1 statt m-1/m+1: auch auf/von leere(n) Desktops (2 → 1)
+        workspace_swipe_use_r      = true, -- r-1/r+1 instead of m-1/m+1: also onto/from empty desktops (2 → 1)
         workspace_swipe_create_new = true,
     },
 })
@@ -309,8 +309,8 @@ hl.gesture({
     action = "workspace"
 })
 
--- Per-device config siehe https://wiki.hypr.land/Configuring/Advanced-and-Cool/Devices/
--- (Beispielblock entfernt; globale Maus-/Tastatureinstellungen stehen oben im input-Block.)
+-- Per-device config: see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Devices/
+-- (example block removed; global mouse/keyboard settings are in the input block above.)
 
 
 ---------------------
@@ -324,28 +324,28 @@ hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 
 -- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("@HOME@/.local/bin/rice-music"))   -- Musik-Player ein/aus
-hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("@HOME@/.local/bin/datist"))      -- Kalender ein/aus
-hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("@HOME@/.local/bin/notist"))      -- notist ein/aus
-hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("@HOME@/.local/bin/mailist --toggle"))   -- mailist (Mail) ein/aus
-hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("@HOME@/.local/bin/sharist --toggle"))   -- sharist (Quick Share) ein/aus
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --toggle"))    -- linguist (Übersetzer) ein/aus
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --selection"))   -- markierten Text übersetzen
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("@HOME@/.local/bin/rice-music"))   -- music player on/off
+hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("@HOME@/.local/bin/datist"))      -- calendar on/off
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("@HOME@/.local/bin/notist"))      -- notist on/off
+hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("@HOME@/.local/bin/mailist --toggle"))   -- mailist (mail) on/off
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("@HOME@/.local/bin/sharist --toggle"))   -- sharist (Quick Share) on/off
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --toggle"))    -- linguist (translator) on/off
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --selection"))   -- translate the selected text
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("~/.config/hypr/lock.sh"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + TAB", hl.dsp.exec_cmd(menu .. " fenster"))          -- Starter: offene Fenster
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd(menu .. " ablage"))     -- Starter: Zwischenablage-Verlauf
-hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(menu .. " zeichen"))       -- Starter: Emoji & Sonderzeichen
-hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("pkill -INT -x wf-recorder"))   -- Scourge-Bildschirmaufnahme stoppen
+hl.bind(mainMod .. " + TAB", hl.dsp.exec_cmd(menu .. " fenster"))          -- launcher: open windows
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd(menu .. " ablage"))     -- launcher: clipboard history
+hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(menu .. " zeichen"))       -- launcher: emoji & symbols
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("pkill -INT -x wf-recorder"))   -- stop the Scourge screen recording
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(0))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("zen-browser"))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("@HOME@/.config/hypr/random_wall.sh"))
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("@HOME@/.local/bin/ist-darkmode"))   -- Hell/Dunkel der Suite umschalten
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("@HOME@/.local/bin/ist-darkmode"))   -- toggle light/dark for the whole suite
 
 
 hl.bind("SUPER + SHIFT + 1", hl.dsp.window.move({ workspace = 1 }))
@@ -416,7 +416,7 @@ hl.bind(mainMod .. " + mouse_up",   hl.dsp.exec_cmd("~/.config/hypr/scripts/ws-s
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- Waybar-Menüs (WLAN/Bluetooth) bei Linksklick außerhalb schließen; der Klick geht normal weiter
+-- close waybar menus (wifi/bluetooth) on a left click outside; the click goes through normally
 hl.bind("mouse:272", hl.dsp.exec_cmd("@HOME@/.config/waybar/scripts/menu-close-outside.sh"), { non_consuming = true })
 
 
@@ -434,7 +434,7 @@ hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = tr
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
--- musicalist direkt (auch wenn das Fenster zu ist; Medientasten treffen sonst evtl. den Browser)
+-- musicalist directly (even if the window is closed; media keys might hit the browser otherwise)
 hl.bind(mainMod .. " + ALT + N",     hl.dsp.exec_cmd("@HOME@/.local/bin/rice-music next"),       { locked = true })
 hl.bind(mainMod .. " + ALT + P",     hl.dsp.exec_cmd("@HOME@/.local/bin/rice-music prev"),       { locked = true })
 hl.bind(mainMod .. " + ALT + SPACE", hl.dsp.exec_cmd("@HOME@/.local/bin/rice-music play-pause"), { locked = true })
@@ -482,22 +482,22 @@ hl.window_rule({
 -- })
 -- overlayLayerRule:set_enabled(false)
 
--- Hell/Dunkel-Wechsel (ist-swipe.py): Standbild-Ebene sofort und ohne Einblendung, sonst blinkt die Waybar
+-- light/dark switch (ist-swipe.py): still-image layer immediately and without fade, otherwise waybar flashes
 hl.layer_rule({
     name    = "no-anim-ist-swipe",
     match   = { namespace = "^ist-swipe$" },
     no_anim = true,
 })
 
--- Power-Menü (wlogout): Hintergrund weichzeichnen
+-- power menu (wlogout): blur the background
 hl.layer_rule({
     name  = "blur-wlogout",
     match = { namespace = "^logout_dialog$" },
     blur  = true,
 })
 
--- wofi (App-Starter, WLAN-/Bluetooth-Menü): Blur wie bei der Konsole.
--- ignore_alpha: die durchsichtigen runden Ecken bleiben ohne Blur.
+-- wofi (app launcher, wifi/bluetooth menu): blur like the terminal.
+-- ignore_alpha: the transparent rounded corners stay without blur.
 hl.layer_rule({
     name         = "blur-wofi",
     match        = { namespace = "^wofi$" },
@@ -505,16 +505,16 @@ hl.layer_rule({
     ignore_alpha = 0.1,
 })
 
--- rofi (Super+R): ebenso
+-- rofi (Super+R): same
 hl.layer_rule({
     name         = "blur-rofi",
     match        = { namespace = "^rofi$" },
     blur         = true,
     ignore_alpha = 0.1,
-    no_anim      = true,     -- Starter sofort zeigen (die Ebenen-Einblendung kostete ~0,4 s)
+    no_anim      = true,     -- show the launcher immediately (the layer fade-in cost ~0.4 s)
 })
 
--- inquirist (Super+R): Blur, sofort da
+-- inquirist (Super+R): blur, instantly there
 hl.layer_rule({
     name         = "blur-inquirist",
     match        = { namespace = "^inquirist" },
@@ -523,7 +523,7 @@ hl.layer_rule({
     no_anim      = true,
 })
 
--- Lautstärke-Mixer (Linksklick auf den Lautsprecher in der Waybar): ebenso
+-- volume mixer (left click on the speaker in waybar): same
 hl.layer_rule({
     name         = "blur-volume-mixer",
     match        = { namespace = "^volume-mixer$" },
@@ -531,8 +531,8 @@ hl.layer_rule({
     ignore_alpha = 0.1,
 })
 
--- Benachrichtigungen (swaync): Panel und Popups. Das Panel ist eine bildschirmfüllende,
--- unsichtbare Ebene; ignore_alpha sorgt dafür, dass nur die sichtbare Karte weichgezeichnet wird.
+-- notifications (swaync): panel and popups. The panel is a full-screen,
+-- invisible layer; ignore_alpha makes sure only the visible card is blurred.
 hl.layer_rule({
     name         = "blur-swaync",
     match        = { namespace = "^swaync-(control-center|notification-window)$" },
@@ -557,9 +557,9 @@ hl.window_rule({
     float = false,
 })
 
--- Eigene Einstellungs-Apps (Rechtsklick auf Lautsprecher/WLAN/Bluetooth in der Waybar):
--- schwebend und mittig, Größe bestimmt die App selbst (~/.local/share/rice-apps/tui.py).
--- filist als Datei-Dialog anderer Programme: schwebend und mittig (Hauptfenster bleiben gekachelt)
+-- own settings apps (right click on speaker/wifi/bluetooth in waybar):
+-- floating and centered, the app decides the size itself (~/.local/share/rice-apps/tui.py).
+-- filist as the file dialog of other programs: floating and centered (main windows stay tiled)
 hl.window_rule({
     name   = "filist-chooser",
     match  = { class = "^de\\.invincible\\.Filist$", title = "^filist · " },
@@ -567,7 +567,7 @@ hl.window_rule({
     center = true,
 })
 
--- notist-Einstellungen immer mittig auf dem Bildschirm (nicht über dem halben Hauptfenster)
+-- notist settings always centered on the screen (not over half of the main window)
 hl.window_rule({
     name   = "notist-settings",
     match  = { class = "^de\\.invincible\\.Notist$", title = "^(Einstellungen|Settings)$" },
@@ -582,14 +582,14 @@ hl.window_rule({
     center = true,
 })
 
--- Waybar gleitet von oben herein/heraus (Einblenden am oberen Rand im Vollbild)
+-- waybar slides in/out from the top (fade-in at the top edge in fullscreen)
 hl.layer_rule({
     name      = "anim-waybar",
     match     = { namespace = "^waybar$" },
     animation = "slide",
 })
 
--- musicalist: Vorschau-Karte unten mittig gleitet von unten herein (gleiche Kurven wie die anderen Ebenen)
+-- musicalist: preview card at the bottom center slides in from below (same curves as the other layers)
 hl.layer_rule({
     name         = "blur-music-preview",
     match        = { namespace = "^music-preview$" },
@@ -598,7 +598,7 @@ hl.layer_rule({
     animation    = "slide bottom",
 })
 
--- musicalist: dieselbe Karte dauerhaft auf dem Hintergrundbild (Einstellung „anzeige immer …“)
+-- musicalist: the same card permanently on the wallpaper (setting "show always …")
 hl.layer_rule({
     name         = "blur-music-desk",
     match        = { namespace = "^music-desk$" },

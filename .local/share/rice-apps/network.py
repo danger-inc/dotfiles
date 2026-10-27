@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# netz – Ersatz für nm-connection-editor (Rechtsklick auf WLAN in der Waybar).
-# Tabs: ¹wlan (Netze, verbinden mit Passwort direkt in der Zeile, verstecktes Netz)
-#       ²verbindungen (gespeicherte Verbindungen + VPN: an/aus, automatisch, IPv4/DNS bearbeiten,
-#                      Passwort zeigen, löschen) ³geräte (Adressen + Live-Durchsatz).
-# Alles über nmcli; "nmcli monitor" meldet Änderungen live.
+# netz – replacement for nm-connection-editor (right click on wifi in the waybar).
+# Tabs: ¹wlan (networks, connect with password right in the row, hidden network)
+#       ²verbindungen (saved connections + VPN: on/off, automatic, edit IPv4/DNS,
+#                      show password, delete) ³geräte (addresses + live throughput).
+# Everything via nmcli; "nmcli monitor" reports changes live.
 import os, re, signal, subprocess, sys, threading, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +26,7 @@ def nmcli(*args, check=False):
 
 
 def split_t(line):
-    """nmcli -t Zeile an nicht maskierten ':' trennen."""
+    """Split an nmcli -t line at unescaped ':'."""
     parts = re.split(r"(?<!\\):", line)
     return [p.replace("\\:", ":").replace("\\\\", "\\") for p in parts]
 
@@ -76,7 +76,7 @@ def connections():
             cons.append({"name": f[0], "uuid": f[1], "type": f[2], "device": f[3],
                          "auto": f[4] == "yes", "active": f[5] == "yes"})
     wifi = [c["uuid"] for c in cons if c["type"] == "802-11-wireless"]
-    if wifi:  # SSID je gespeicherter WLAN-Verbindung (Name ≠ SSID, z. B. "Netz 1")
+    if wifi:  # SSID per saved wifi connection (name ≠ SSID, e.g. "Netz 1")
         uuid = None
         for line in nmcli("-t", "-f", "connection.uuid,802-11-wireless.ssid", "con", "show", *wifi).splitlines():
             k, _, v = line.partition(":")
@@ -109,7 +109,7 @@ def con_details(uuid):
     return kv(nmcli("-t", "-f", fields, "con", "show", uuid).replace("\\:", ":"))
 
 
-# ---------- Fenster ----------
+# ---------- window ----------
 class NetWindow(tui.TuiWindow):
     APP_ID = "de.invincible.Network"
 
@@ -177,12 +177,12 @@ class NetWindow(tui.TuiWindow):
             self.timer = None
         self.last_bytes = {}
 
-    # ---------- allgemein ----------
+    # ---------- general ----------
     def spawn(self, *cmd):
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
 
     def act(self, start, ok, *args, after=None):
-        """nmcli-Befehl im Hintergrund, Meldung in der Statuszeile."""
+        """Run an nmcli command in the background, message in the status line."""
         if start:
             self.say(start, seconds=60)
 
@@ -230,7 +230,7 @@ class NetWindow(tui.TuiWindow):
         self.ticks += 1
         if not self.get_visible():
             return True
-        self.update_traffic()  # auch im Hintergrund, damit der Verlauf beim Umschalten schon da ist
+        self.update_traffic()  # also in the background so the history is already there when switching
         if self.current_tab() == "wifi" and self.ticks % 6 == 0:
             self.refresh()
         return True
@@ -295,7 +295,7 @@ class NetWindow(tui.TuiWindow):
         row.mark.set_label("● verbunden" if n["inuse"] else "★ gespeichert" if saved else "")
         row.net = n
         key = (n["inuse"], saved["uuid"] if saved else None, bool(n["security"]))
-        if key != row.key:  # Aktionen nur neu bauen, wenn sich der Zustand ändert
+        if key != row.key:  # only rebuild actions when the state changes
             row.key = key
             self.build_net_body(row, n, saved)
 

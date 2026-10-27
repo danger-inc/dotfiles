@@ -1,4 +1,4 @@
-/* V1 „Kästen“ – die erste neue Version, etwas größer */
+/* V1 "boxes" – the first new version, slightly larger */
 @import url("file://@HOME@/.config/waybar/variants/base.css");
 #clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #ws, #custom-power {
     background-color: alpha(@background, 0.82); color: @foreground; border: 1px solid alpha(@primary, 0.55);

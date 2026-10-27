@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# Benachrichtigungs-Modul für Waybar: liest swaync-client -swb und färbt den
-# Punkt mit der matugen-Farbe "primary". Ändert sich colors.css (Super+W),
-# wird die Ausgabe sofort neu geschrieben – ohne Waybar neu zu laden.
+# Notification module for waybar: reads swaync-client -swb and colors the
+# dot with the matugen color "primary". If colors.css changes (Super+W),
+# the output is rewritten immediately – without reloading waybar.
 import json, os, re, select, subprocess, sys
 
 COLORS = os.path.expanduser("~/.cache/matugen/colors.css")

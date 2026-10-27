@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# bluetooth – Ersatz für blueman-manager (Rechtsklick auf Bluetooth in der Waybar).
-# Tabs: ¹geräte (bekannte Geräte: verbinden, Akku, vertrauen, blockieren, entfernen, Audio-Profil)
-#       ²suchen (Suche läuft, solange der Tab offen ist; koppeln) ³adapter (an/aus, sichtbar, Name …).
-# Direkt über D-Bus (BlueZ) – Änderungen kommen live an. Solange das Fenster offen ist, ist es auch
-# der Pairing-Agent: PIN-Abfragen erscheinen als Hinweis oben im Fenster.
+# bluetooth – replacement for blueman-manager (right click on bluetooth in the waybar).
+# Tabs: ¹geräte (known devices: connect, battery, trust, block, remove, audio profile)
+#       ²suchen (scan runs while the tab is open; pair) ³adapter (on/off, visible, name …).
+# Directly via D-Bus (BlueZ) – changes arrive live. As long as the window is open it is also
+# the pairing agent: PIN requests appear as a notice at the top of the window.
 import json, os, signal, subprocess, sys, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -71,7 +71,7 @@ class BtWindow(tui.TuiWindow):
             self.mgr = None
             self.say(f"bluez nicht erreichbar: {e.message}", error=True, seconds=600)
 
-        # Hinweis für PIN-Abfragen (Agent)
+        # notice for PIN requests (agent)
         self.banner = vbox(spacing=6)
         self.banner.add_css_class("banner")
         self.banner.set_visible(False)
@@ -205,7 +205,7 @@ class BtWindow(tui.TuiWindow):
         if self.refresh_id is None:
             self.refresh_id = GLib.timeout_add(80, self.refresh)
 
-    # ---------- Agent (PIN / Bestätigung beim Koppeln) ----------
+    # ---------- agent (PIN / confirmation when pairing) ----------
     def register_agent(self):
         try:
             bus = Gio.bus_get_sync(Gio.BusType.SYSTEM)
@@ -298,7 +298,7 @@ class BtWindow(tui.TuiWindow):
     def hide_banner(self):
         self.banner.set_visible(False)
 
-    # ---------- Anzeige ----------
+    # ---------- display ----------
     def refresh(self):
         self.refresh_id = None
         adapter, devs = self.objects()
@@ -397,7 +397,7 @@ class BtWindow(tui.TuiWindow):
         if paired or prop(dev, "Trusted"):
             btns.append(tui.Button("entfernen", lambda: self.remove(row), danger=True))
         row.body.append(btns)
-        # Audio-Profil (Kopfhörer: Musik vs. Freisprechen)
+        # audio profile (headphones: music vs. hands-free)
         row.profile_box = hbox(label("profil", "dim"), spacing=10)
         row.profile = tui.Select(lambda p: self.set_profile(row, p), max_chars=40)
         row.profile_box.append(row.profile)
@@ -435,7 +435,7 @@ class BtWindow(tui.TuiWindow):
             row.confirm = time.monotonic() + 4
             self.say("nochmal klicken zum entfernen", error=True, seconds=4)
 
-    # ---------- Audio-Profile über PipeWire ----------
+    # ---------- audio profiles via PipeWire ----------
     def load_cards(self):
         def get():
             try:
@@ -479,7 +479,7 @@ class BtWindow(tui.TuiWindow):
     def set_power(self, on):
         if self.adapter is None:
             return
-        if on:  # per rfkill blockiert? Dann erst freigeben
+        if on:  # blocked by rfkill? Then unblock first
             subprocess.run(["rfkill", "unblock", "bluetooth"], capture_output=True)
         self.set_prop(self.adapter, ADP, "Powered", on, ok="bluetooth an" if on else "bluetooth aus")
 
@@ -516,7 +516,7 @@ class BtWindow(tui.TuiWindow):
                 self.a_info.attach(label(k, "dim"), 0, r, 1, 1)
                 self.a_info.attach(label(str(v)), 1, r, 1, 1)
 
-    # ---------- Suche ----------
+    # ---------- scan ----------
     def toggle_scan(self):
         if self.adapter is None:
             return
@@ -531,7 +531,7 @@ class BtWindow(tui.TuiWindow):
             self.call(self.adapter, "StopDiscovery")
 
     def shutdown(self):
-        """Prozessende: Agent abmelden."""
+        """Process end: unregister the agent."""
         if self.agent_id:
             try:
                 self.agent_mgr.call_sync("UnregisterAgent", GLib.Variant("(o)", (AGENT_PATH,)),

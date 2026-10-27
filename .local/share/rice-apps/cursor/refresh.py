@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Sichtbaren Cursor nach Theme-Wechsel neu zeichnen lassen – ohne ihn auszublenden.
+"""Have the visible cursor redrawn after a theme change – without hiding it.
 
-Hyprland lädt bei `hyprctl setcursor` das neue Theme, zeichnet den gerade sichtbaren Cursor
-aber erst neu, wenn sich der angeforderte Cursor-Name ändert. Diese unsichtbare Fläche
-legt sich über den Bildschirm und zeigt dort selbst den neuen Pfeil (aus dem Theme-Link, also schon
-in der neuen Farbe). Danach verschwindet sie, die App darunter fordert ihre Form wieder an –
-für Hyprland ein anderer Name, also zeichnet es aus dem neuen Theme. Der Zeiger bleibt die ganze
-Zeit sichtbar. Hyprland prüft den Zeiger-Fokus nur bei Bewegung, darum je 1 px Schubs.
+On `hyprctl setcursor` Hyprland loads the new theme but only redraws the currently visible cursor
+when the requested cursor name changes. This invisible surface
+covers the screen and itself shows the new arrow there (from the theme link, so already
+in the new color). Then it disappears, the app below requests its shape again –
+for Hyprland a different name, so it draws from the new theme. The pointer stays visible the whole
+time. Hyprland only checks the pointer focus on movement, hence a 1 px nudge each.
 """
 import json, subprocess
 
@@ -33,8 +33,8 @@ def move(x, y):
 
 
 def nudge(dx, expect=None):
-    """Zeiger 1 px schieben – nur wenn er noch dort ist, wo wir ihn erwarten (sonst bewegt der
-    Nutzer ihn gerade, das löst die Neuprüfung ohnehin aus)."""
+    """Move the pointer 1 px – only if it is still where we expect it (otherwise the
+    user is moving it right now, which triggers the re-check anyway)."""
     pos = cursor_pos()
     if pos is None or (expect is not None and pos != expect):
         return None
@@ -42,8 +42,8 @@ def nudge(dx, expect=None):
     return pos[0] + dx, pos[1]
 
 
-# Bildschirmfüllend (je Monitor): auch ein bewegter Zeiger landet sicher darauf. Klicks fängt sie
-# nur in den ~70 ms zwischen Erscheinen und Verschwinden ab.
+# Full-screen (per monitor): even a moving pointer lands on it safely. It catches clicks
+# only in the ~70 ms between appearing and disappearing.
 wins = []
 disp = Gdk.Display.get_default()
 for i in range(disp.get_n_monitors()):
@@ -54,7 +54,7 @@ for i in range(disp.get_n_monitors()):
     GtkLayerShell.set_monitor(win, disp.get_monitor(i))
     for edge in (GtkLayerShell.Edge.TOP, GtkLayerShell.Edge.BOTTOM, GtkLayerShell.Edge.LEFT, GtkLayerShell.Edge.RIGHT):
         GtkLayerShell.set_anchor(win, edge, True)
-    GtkLayerShell.set_exclusive_zone(win, -1)      # auch über der Waybar
+    GtkLayerShell.set_exclusive_zone(win, -1)      # also above the waybar
     GtkLayerShell.set_keyboard_mode(win, GtkLayerShell.KeyboardMode.NONE)
     win.set_app_paintable(True)
     win.set_visual(win.get_screen().get_rgba_visual())
@@ -76,7 +76,7 @@ def finish(*_):
 
 
 def on_realize(w):
-    # „arrow“ kennt das cursor-shape-Protokoll nicht → GTK zeichnet ihn selbst aus dem Theme
+    # "arrow" is unknown to the cursor-shape protocol → GTK draws it itself from the theme
     w.get_window().set_cursor(Gdk.Cursor.new_from_name(w.get_display(), "arrow"))
 
 
@@ -91,7 +91,7 @@ def on_enter(*_):
     if state.get("entered"):
         return False
     state["entered"] = True
-    GLib.timeout_add(40, finish)  # GTK setzt den Cursor beim Betreten; einen Frame abwarten
+    GLib.timeout_add(40, finish)  # GTK sets the cursor on enter; wait one frame
     return False
 
 

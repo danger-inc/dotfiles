@@ -1,12 +1,12 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-  // Aufruf über "161" (~/.config/fastfetch/161.sh): wählt das Layout nach Fensterbreite.
-  // Farben: blue = primary, cyan = secondary, magenta = tertiary (matugen über kitty).
-  // Logo: make-logo.py, Farben aus der Kitty-Palette 17-26 (kitty-colors.sh), färben sich bei Super+W mit.
-  // Linker Abstand (Zentrierung) kommt von 161.sh.
-  // Stil: angelehnt an Evangelion-Titelkarten/NERV-Anzeigen (Großbuchstaben, nummerierte Abschnitte).
+  // Called via "161" (~/.config/fastfetch/161.sh): picks the layout by window width.
+  // Colors: blue = primary, cyan = secondary, magenta = tertiary (matugen via kitty).
+  // Logo: make-logo.py, colors from the kitty palette 17-26 (kitty-colors.sh), recolor on Super+W.
+  // Left margin (centering) comes from 161.sh.
+  // Style: inspired by Evangelion title cards/NERV displays (capital letters, numbered sections).
   "logo": {
-    // Fertige ANSI-Datei aus make-logo.py (Pixel-Art, Farben aus der Kitty-Palette 17-26)
+    // Finished ANSI file from make-logo.py (pixel art, colors from the kitty palette 17-26)
     "type": "file-raw",
     "source": "~/.config/fastfetch/161.txt",
     "padding": {
@@ -16,7 +16,7 @@
   },
   "display": {
     "separator": "",
-    // Zu lange Zeilen abschneiden statt umbrechen
+    // cut off too-long lines instead of wrapping
     "disableLinewrap": true,
     "key": {
       "width": 14

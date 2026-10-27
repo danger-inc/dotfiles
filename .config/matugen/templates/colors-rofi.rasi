@@ -1,7 +1,7 @@
-/* Automatisch erzeugt von matugen aus {{image}} */
+/* Generated automatically by matugen from {{image}} */
 /* Vorlage: ~/.config/matugen/templates/colors-rofi.rasi */
 * {
-    /* 99 = 60 % Deckkraft wie Kitty, 4d = 30 % für das Suchfeld */
+    /* 99 = 60 % opacity like kitty, 4d = 30 % for the search field */
     bg:           #{{colors.surface.default.hex_stripped}}99;
     bg-input:     #{{colors.surface.default.hex_stripped}}4d;
     border-dim:   #{{colors.primary.default.hex_stripped}}73;
@@ -11,7 +11,7 @@
     fg-dim:       {{colors.outline.default.hex}};
     fg-selected:  {{colors.on_primary.default.hex}};
     border-color: {{colors.primary.default.hex}};
-    /* -ist-Look (Starter): Fläche 85 %, Reiter 22 %, Zeile 12 %, Linie 55 % */
+    /* -ist look (launcher): surface 85 %, tab 22 %, row 12 %, line 55 % */
     bg-panel:     #{{colors.surface.default.hex_stripped}}d9;
     bg-tab:       #{{colors.primary.default.hex_stripped}}38;
     bg-hover:     #{{colors.primary.default.hex_stripped}}1f;

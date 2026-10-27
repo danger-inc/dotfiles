@@ -1,4 +1,4 @@
-/* V2 „Drei Gruppen“ – links/Mitte/rechts je ein Kasten, Module durch feine Linien getrennt */
+/* V2 "three groups" – one box each for left/center/right, modules separated by fine lines */
 @import url("file://@HOME@/.config/waybar/variants/base.css");
 .modules-left, .modules-center, .modules-right {
     background-color: alpha(@background, 0.84); border: 1px solid alpha(@primary, 0.55); border-radius: 6px;

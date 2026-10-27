@@ -1,4 +1,4 @@
 #!/bin/bash
-# Startet die Lautstärke-Anzeige (einmal pro Sitzung). gtk4-layer-shell muss vor libwayland geladen sein.
+# Starts the volume display (once per session). gtk4-layer-shell must be loaded before libwayland.
 pkill -f "^python3 @HOME@/.local/share/rice-apps/volume-osd.py" 2>/dev/null
 LD_PRELOAD=/usr/lib/libgtk4-layer-shell.so exec python3 @HOME@/.local/share/rice-apps/volume-osd.py

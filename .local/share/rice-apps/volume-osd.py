@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# Bildschirm-Anzeige unten mittig für Lautstärke UND Helligkeit: je eine Pille mit Regler, sobald sich der
-# Wert ändert (Tasten, Waybar, Mixer, Scourge …). Sind beide gerade aktiv, stapeln sie sich (Helligkeit
-# oben) statt sich zu überdecken; ist die musicalist-Vorschau offen, weichen sie über die Karte aus.
-# Läuft dauerhaft (gestartet aus hyprland.lua über volume-osd). Lautstärke per "pactl subscribe",
-# Helligkeit per Kernel-Benachrichtigung auf /sys/class/backlight (kein Abfragen). Farben live aus matugen.
-# Start nur über das Startskript: gtk4-layer-shell muss vor libwayland geladen werden (LD_PRELOAD).
+# On-screen display at the bottom center for volume AND brightness: one pill with a slider each as soon as the
+# value changes (keys, waybar, mixer, Scourge …). If both are active they stack (brightness
+# on top) instead of overlapping; if the musicalist preview is open, they move up over the card.
+# Runs permanently (started from hyprland.lua via volume-osd). Volume via "pactl subscribe",
+# brightness via kernel notification on /sys/class/backlight (no polling). Colors live from matugen.
+# Start only through the start script: gtk4-layer-shell must be loaded before libwayland (LD_PRELOAD).
 import glob, json, os, re, select, socket, subprocess, sys, threading, time
 
 import gi
@@ -38,11 +38,11 @@ levelbar block.empty { background: none; border: none; }
 .muted levelbar block.filled { background-color: alpha(@foreground, 0.35); }
 .over levelbar block.filled { background-color: #ffb4ab; }
 """
-SHOW_MS = 1500        # so lange bleibt eine Pille nach der letzten Änderung stehen
-SLIDE_MS = 220        # Ein-/Ausgleiten (Höhe) – Gegenstück zur CSS-Übergangszeit
-GAP = 10              # Abstand zwischen den Pillen
-BASE_MARGIN = 70      # Abstand zum unteren Bildschirmrand
-WIDTH = 380           # feste Breite: beide Pillen gleich breit, Fläche ändert nie die Breite
+SHOW_MS = 1500        # how long a pill stays after the last change
+SLIDE_MS = 220        # slide in/out (height) – counterpart to the CSS transition time
+GAP = 10              # gap between the pills
+BASE_MARGIN = 70      # distance to the bottom screen edge
+WIDTH = 380           # fixed width: both pills equally wide, the surface never changes width
 RUNTIME = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
 
 
@@ -69,7 +69,7 @@ def read_brightness(dev):
 
 
 def hypr(cmd):
-    """Anfrage an den Hyprland-Socket (schnell, ohne hyprctl-Prozess). None bei Fehler."""
+    """Request to the Hyprland socket (fast, without a hyprctl process). None on error."""
     sig = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
     if not sig:
         return None
@@ -87,7 +87,7 @@ def hypr(cmd):
 
 
 def music_card_top():
-    """Abstand der Oberkante der musicalist-Vorschau zum unteren Bildschirmrand (0 = nicht offen)."""
+    """Distance of the top edge of the musicalist preview to the bottom screen edge (0 = not open)."""
     layers = hypr("j/layers")
     if not layers:
         return 0
@@ -105,7 +105,7 @@ def music_card_top():
 
 
 class Pill:
-    """Eine Anzeige (Symbol, Balken, Prozent) in einem Revealer, der sie weich auf- und zuschiebt."""
+    """One display (icon, bar, percent) in a revealer that slides it open and closed smoothly."""
 
     def __init__(self, osd):
         self.osd = osd
@@ -125,7 +125,7 @@ class Pill:
                                 transition_duration=SLIDE_MS, child=self.box)
         self.rev.connect("notify::child-revealed", lambda *_: osd.maybe_hide())
         self.hide_id = None
-        self.shown_value = None       # angezeigter (animierter) Balkenwert
+        self.shown_value = None       # displayed (animated) bar value
         self.target = 0
         self.tick_id = None
 
@@ -152,7 +152,7 @@ class Pill:
         self.rev.set_reveal_child(False)
         return False
 
-    # Balken gleitet zum neuen Wert statt zu springen
+    # bar glides to the new value instead of jumping
     def animate_to(self, value, jump=False):
         self.target = value
         if jump or self.shown_value is None:
@@ -184,7 +184,7 @@ class OSD(Gtk.Application):
         self.watch_id = None
 
     def do_activate(self):
-        self.hold()  # läuft auch ohne sichtbares Fenster weiter
+        self.hold()  # keeps running even without a visible window
         self.css = Gtk.CssProvider()
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), self.css,
                                                   Gtk.STYLE_PROVIDER_PRIORITY_USER)
@@ -204,15 +204,15 @@ class OSD(Gtk.Application):
 
         self.vol = Pill(self)
         self.bri = Pill(self)
-        # Helligkeit oben, Lautstärke unten; Abstand gehört zur oberen Pille, damit er mitgleitet
+        # brightness on top, volume below; the gap belongs to the upper pill so it slides along
         self.bri.box.set_margin_bottom(GAP)
         stack = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.END)
-        stack.set_size_request(WIDTH, 1)   # nie 0×0 (sonst ungültige Layer-Fläche)
+        stack.set_size_request(WIDTH, 1)   # never 0×0 (otherwise invalid layer surface)
         stack.append(self.bri.rev)
         stack.append(self.vol.rev)
         self.win.set_child(stack)
 
-        self.last_vol = read_volume()      # Startzustand merken, nicht anzeigen
+        self.last_vol = read_volume()      # remember the start state, do not show it
         threading.Thread(target=self.listen_volume, daemon=True).start()
         self.dev = backlight_dir()
         if self.dev:
@@ -227,9 +227,9 @@ class OSD(Gtk.Application):
             pass
         self.css.load_from_string(css + CSS)
 
-    # ----- Quellen -----
+    # ----- sources -----
     def listen_volume(self):
-        while True:  # pactl neu starten, falls PipeWire neu startet
+        while True:  # restart pactl in case PipeWire restarts
             p = subprocess.Popen(["pactl", "subscribe"], stdout=subprocess.PIPE, text=True)
             for line in p.stdout:
                 if "'change' on sink" in line or "'change' on server" in line:
@@ -238,7 +238,7 @@ class OSD(Gtk.Application):
             time.sleep(2)
 
     def listen_brightness(self):
-        # Der Kernel meldet jede Änderung über sysfs_notify auf actual_brightness → poll() wacht auf
+        # the kernel reports every change via sysfs_notify on actual_brightness → poll() wakes up
         while True:
             try:
                 with open(f"{self.dev}/actual_brightness") as f:
@@ -271,13 +271,13 @@ class OSD(Gtk.Application):
             self.present(self.bri, now, icon, f"{now}%")
         return False
 
-    # ----- Anzeigen -----
+    # ----- displays -----
     def present(self, pill, value, icon, text, classes=()):
         if not self.win.get_visible():
             self.set_margin(self.wanted_margin(), animate=False)
             self.win.set_visible(True)
         pill.show(value, icon, text, classes)
-        if self.watch_id is None:     # solange sichtbar: der Musik-Vorschau ausweichen
+        if self.watch_id is None:     # while visible: dodge the music preview
             self.watch_id = GLib.timeout_add(200, self.watch)
 
     def maybe_hide(self):

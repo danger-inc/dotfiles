@@ -1,17 +1,17 @@
-# Gemeinsame Logik für die Waybar-Menüs (wird per "source" eingebunden).
+# Shared logic for the waybar menus (included with "source").
 
-MENU_OPENED="${XDG_RUNTIME_DIR:-/tmp}/waybar-menu-opened"   # "<ms> <menü>"
-MENU_CLOSED="${XDG_RUNTIME_DIR:-/tmp}/waybar-menu-closed"   # "<ms> <menü>"
+MENU_OPENED="${XDG_RUNTIME_DIR:-/tmp}/waybar-menu-opened"   # "<ms> <menu>"
+MENU_CLOSED="${XDG_RUNTIME_DIR:-/tmp}/waybar-menu-closed"   # "<ms> <menu>"
 MENU_SCRIPTS="$HOME/.config/waybar/scripts"
 
 now_ms() { date +%s%3N; }
 
-# wofi mit Tastatur "bei Bedarf" statt "exklusiv" (siehe ~/.local/share/rice-apps/wofi-ondemand):
-# sonst schickt Hyprland jeden Mausklick an wofi, und ein Klick auf ein anderes Waybar-Icon
-# (Bluetooth offen -> WLAN) würde nur das Menü schließen statt direkt umzuschalten.
+# wofi with keyboard "on demand" instead of "exclusive" (see ~/.local/share/rice-apps/wofi-ondemand):
+# otherwise Hyprland sends every mouse click to wofi, and a click on another waybar icon
+# (bluetooth open -> wifi) would only close the menu instead of switching directly.
 wofi() { LD_PRELOAD="$HOME/.local/share/rice-apps/wofi-ondemand/wofi-ondemand.so" command wofi "$@"; }
 
-# Lautstärke-Mixer ausblenden, falls sichtbar (Signal an den Hintergrund-Prozess)
+# hide the volume mixer if visible (signal to the background process)
 mixer_hide() {
     local pid
     [[ -e ${XDG_RUNTIME_DIR:-/tmp}/volume-mixer-open ]] || return 1
@@ -20,10 +20,10 @@ mixer_hide() {
 }
 
 # Aufruf: menu_toggle_guard <name>   (z. B. wifi, bluetooth)
-# - Klick aufs eigene Icon bei offenem Menü: nur schließen (auch wenn menu-close-outside.sh
-#   es durch denselben Klick gerade geschlossen hat).
-# - Ein anderes Menü ist offen: das schließen und dieses direkt öffnen.
-# Startet außerdem die Klick-Sperre für Fenster (click-catcher.py).
+# - click on its own icon while the menu is open: only close (even if menu-close-outside.sh
+#   already closed it with the same click).
+# - another menu is open: close it and open this one directly.
+# Also starts the click lock for windows (click-catcher.py).
 menu_toggle_guard() {
     local name=$1 t n
     mixer_hide
@@ -39,17 +39,17 @@ menu_toggle_guard() {
     menu_catch_clicks
 }
 
-# Unsichtbare Fläche über den Fenstern: Klick daneben schließt nur das Menü.
+# invisible surface above the windows: a click next to the menu only closes the menu.
 menu_catch_clicks() {
     pkill -f 'python3 .*click-catcher\.py'
     setsid -f "$MENU_SCRIPTS/click-catcher.py" >/dev/null 2>&1
 }
 
-# x-Position für ein Menü der Breite $1 (wofi --width): zentriert unter dem Mauszeiger
-# (= dem angeklickten Icon), aber nicht über die Ränder der Waybar hinaus.
+# x position for a menu of width $1 (wofi --width): centered under the mouse pointer
+# (= the clicked icon), but not beyond the edges of the waybar.
 menu_xoffset() {
-    local width=$(( $1 + 14 ))   # wofi rechnet Rahmen/Padding noch dazu
-    local bar_margin=50          # margin-left/-right aus config.jsonc
+    local width=$(( $1 + 14 ))   # wofi adds border/padding on top
+    local bar_margin=50          # margin-left/-right from config.jsonc
     local cursor_x mon_x mon_w x
     cursor_x=$(hyprctl cursorpos | cut -d, -f1)
     read -r mon_x mon_w < <(hyprctl -j monitors | jq -r '.[] | select(.focused) | "\(.x) \((.width / .scale) | floor)"')

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Holt die Live-Configs aus ~/.config in dieses Repo (das Repo ist die Kopie, ~/.config das Original).
-# Absolute Home-Pfade werden zu @HOME@; install.sh setzt sie beim Installieren wieder ein.
+# Fetches the live configs from ~/.config into this repo (the repo is the copy, ~/.config the original).
+# Absolute home paths become @HOME@; install.sh puts them back on install.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 MAP="$PWD/links.txt"
@@ -10,23 +10,23 @@ while read -r name _; do
     [[ -e "$src" ]] || { echo "missing: $name"; continue; }
     if [[ -d "$src" ]]; then
         mkdir -p "$dst"
-        # Backups (.bak-*), Caches und Symlinks bleiben draußen
+        # backups (.bak-*), caches and symlinks stay out
         rsync_list=$(cd "$src" && find . -type f ! -name '*.bak*' ! -name '*.pyc' ! -name '*.so' ! -path '*__pycache__*' ! -path './.git/*')
         (cd "$src" && printf '%s\n' "$rsync_list" | cpio -pdmu --quiet "$dst" 2>/dev/null)
-        # Dateien, die im Original verschwunden sind, auch hier entfernen
+        # files that disappeared in the original are removed here as well
         (cd "$dst" && find . -type f | while read -r f; do [[ -e "$src/$f" ]] || rm -f "$f"; done)
     else
         mkdir -p "$(dirname "$dst")"; cp -L "$src" "$dst"
     fi
 done < "$MAP"
-# Home-Pfade neutralisieren (nur Textdateien)
+# neutralize home paths (text files only)
 grep -rIl "$HOME" --exclude-dir=.git --exclude-dir=.githooks . 2>/dev/null | while read -r f; do
     sed -i "s|$HOME|@HOME@|g" "$f"
 done
-# statische deutsche Beschriftungen im Repo auf Englisch (Live-Config bleibt deutsch)
+# static german labels become english in the repo (the live config stays german)
 sed -i -f i18n-static.sed .config/rofi/config.rasi .config/swaync/config.json .config/waybar/scripts/wifi-menu.sh \
     .config/waybar/scripts/bluetooth-menu.sh .config/waybar/config-classic.jsonc .config/waybar/config-suite.jsonc .config/hypr/scripts/apply-colors.sh
-# Zen-Profilpfad ist persönlich: Abschnitt auskommentiert ins Repo, install.sh trägt das Profil des Installierenden ein
+# the Zen profile path is personal: section commented out in the repo, install.sh fills in the installer's profile
 sed -i -E '/^\[templates\.zen\]/,/^$/{/^#ZEN# /!s/^(.)/#ZEN# \1/}' .config/matugen/config.toml
 sed -i -E 's|^(#ZEN# output_path = ).*|\1"~/.config/zen/@ZENPROFILE@/chrome/userChrome.css"|' .config/matugen/config.toml
 python3 .githooks/privacy-check.py && echo "sync done."

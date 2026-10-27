@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-# rice-tui: hält die Apps audio, netz und bluetooth fertig gebaut im Hintergrund bereit, damit sie
-# beim Rechtsklick in der Waybar sofort erscheinen (wie der Lautstärke-Mixer).
-#   Start:   ricetui.py --daemon          (aus hyprland.lua)
-#   Öffnen:  echo audio > $XDG_RUNTIME_DIR/rice-tui.fifo   (macht ~/.local/bin/rice-audio usw.)
-#            "audio" = ein/aus (hat das Fenster schon den Fokus: verstecken), "audio:out" = Tab öffnen,
-#            "audio:hide" = verstecken.
-# Schließen versteckt die Fenster nur; Timer, Pegel und Bluetooth-Suche laufen nur, solange sie offen sind.
+# rice-tui: keeps the apps audio, netz and bluetooth fully built in the background so they
+# appear instantly on a right click in the waybar (like the volume mixer).
+#   Start:   ricetui.py --daemon          (from hyprland.lua)
+#   Open:    echo audio > $XDG_RUNTIME_DIR/rice-tui.fifo   (done by ~/.local/bin/rice-audio etc.)
+#            "audio" = toggle (if the window already has focus: hide), "audio:out" = open tab,
+#            "audio:hide" = hide.
+# Closing only hides the windows; timers, levels and the bluetooth scan run only while they are open.
 import os, signal, sys, warnings
 
-# Software-Renderer: sieht gleich aus (Blur macht Hyprland), braucht aber nur halb so viel Speicher
+# software renderer: looks the same (Hyprland does the blur) but needs only half the memory
 os.environ.setdefault("GSK_RENDERER", "cairo")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tui
-import rice_i18n; rice_i18n.install()  # noqa: E402  (setzt die GTK-Versionen)
+import rice_i18n; rice_i18n.install()  # noqa: E402  (sets the GTK versions)
 from tui import Gio, GLib, Gtk  # noqa: E402
 
 RUNTIME = GLib.get_user_runtime_dir()
@@ -30,7 +30,7 @@ class Daemon(Gtk.Application):
 
     def do_activate(self):
         self.hold()
-        tui.Theme.get()  # einmal laden, damit schon das erste Fenster fertig gestylt ist
+        tui.Theme.get()  # load once, so even the first window is already styled
         for name, (mod, cls) in APPS.items():
             module = __import__(mod)
             self.wins[name] = getattr(module, cls)(self)
@@ -39,7 +39,7 @@ class Daemon(Gtk.Application):
             os.unlink(FIFO)
         if not os.path.exists(FIFO):
             os.mkfifo(FIFO, 0o600)
-        # O_RDWR: die Leitung bleibt offen, auch wenn gerade niemand schreibt (kein EOF-Dauerfeuer)
+        # O_RDWR: the pipe stays open even when nobody is writing (no EOF flood)
         self.fd = os.open(FIFO, os.O_RDWR | os.O_NONBLOCK)
         GLib.io_add_watch(self.fd, GLib.PRIORITY_HIGH, GLib.IOCondition.IN, self.on_fifo)
         with open(PID_FILE, "w") as f:
@@ -50,7 +50,7 @@ class Daemon(Gtk.Application):
                 GLib.unix_signal_add(GLib.PRIORITY_HIGH, sig, self.stop)
         if self.show_first:
             self.toggle(self.show_first)
-        else:  # Fenster schon mal unsichtbar vorbereiten, damit auch das erste Öffnen sofort geht
+        else:  # prepare windows invisibly so even the first open is instant
             for win in self.wins.values():
                 GLib.idle_add(lambda w=win: w.realize() and False)
 
@@ -77,8 +77,8 @@ class Daemon(Gtk.Application):
         GLib.idle_add(self.close_menus)
 
     def close_menus(self):
-        """Offenes WLAN-/Bluetooth-Menü (wofi samt Klick-Sperre) und den Lautstärke-Mixer zumachen –
-        erst nach dem Einblenden, damit es das Fenster nicht verzögert."""
+        """Close an open wifi/bluetooth menu (wofi including its click lock) and the volume mixer –
+        only after showing, so it does not delay the window."""
         if os.path.exists(RUNTIME + "/volume-mixer-open"):
             try:
                 os.kill(int(open(RUNTIME + "/volume-mixer.pid").read()), signal.SIGUSR2)
@@ -120,13 +120,13 @@ def running_pid():
 def main(show=None):
     args = sys.argv[1:]
     show = next((a.split("=", 1)[1] for a in args if a.startswith("--show=")), show)
-    if running_pid():  # läuft schon: nur Bescheid geben
+    if running_pid():  # already running: just notify it
         if show:
             with open(FIFO, "w") as f:
                 f.write(show + "\n")
         if "--daemon" not in args:
             return 0
-        os.kill(running_pid(), signal.SIGTERM)  # --daemon: alten Prozess ersetzen
+        os.kill(running_pid(), signal.SIGTERM)  # --daemon: replace the old process
         import time
         time.sleep(0.5)
     return Daemon(show).run(None)

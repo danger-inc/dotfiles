@@ -1,5 +1,5 @@
 #!/bin/bash
-# Sperrbildschirm: aktuellen Hintergrund für hyprlock bereitstellen und sperren (Super+L, Starter, hypridle).
+# Lock screen: provide the current wallpaper for hyprlock and lock (Super+L, launcher, hypridle).
 pidof hyprlock >/dev/null && exit 0
 mkdir -p ~/.cache
 img=$(awww query 2>/dev/null | sed -n 's/.*image: //p' | head -1)

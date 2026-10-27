@@ -46,7 +46,7 @@ def main():
         if not os.path.isfile(path) or rel.startswith(".githooks/"):
             continue
         raw = open(path, "rb").read()
-        if IMG.search(rel):                       # Bilder: nur Metadaten (EXIF/Text-Chunks) sind kritisch
+        if IMG.search(rel):                       # images: only metadata (EXIF/text chunks) is critical
             if b"eXIf" in raw or b"tEXt" in raw or b"iTXt" in raw or b"Exif\x00" in raw[:4096]:
                 bad.append((rel, "image contains metadata (re-save it without EXIF/text chunks)"))
             continue

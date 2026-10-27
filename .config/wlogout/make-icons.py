@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# Erzeugt die wlogout-Icons in den aktuellen matugen-Farben:
-# <name>.png in primary, <name>-hover.png in background (für die gefüllte Karte).
-# Läuft bei jedem Öffnen über launch.sh, ist also nach Super+W sofort aktuell.
+# Creates the wlogout icons in the current matugen colors:
+# <name>.png in primary, <name>-hover.png in background (for the filled card).
+# Runs on every open through launch.sh, so it is up to date right after Super+W.
 import os, re, subprocess
 
 cache = os.path.expanduser("~/.cache/ist")

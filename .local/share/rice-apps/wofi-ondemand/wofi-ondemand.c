@@ -1,8 +1,8 @@
-// LD_PRELOAD für wofi: Tastatur "bei Bedarf" statt "exklusiv".
-// Grund: Solange eine Ebene die Tastatur exklusiv hält, schickt Hyprland auch ALLE Mausklicks an
-// sie. Ein Klick auf ein anderes Waybar-Icon (z. B. Bluetooth-Menü offen -> WLAN) kam dadurch nie
-// bei der Waybar an und schloss nur das Menü. Mit "on demand" bekommt wofi trotzdem den Fokus.
-// Bauen: gcc -shared -fPIC -O2 -o wofi-ondemand.so wofi-ondemand.c
+// LD_PRELOAD for wofi: keyboard "on demand" instead of "exclusive".
+// Reason: as long as a layer holds the keyboard exclusively, Hyprland also sends ALL mouse clicks to
+// it. A click on another waybar icon (e.g. bluetooth menu open -> wifi) therefore never reached
+// the waybar and only closed the menu. With "on demand" wofi still gets the focus.
+// Build: gcc -shared -fPIC -O2 -o wofi-ondemand.so wofi-ondemand.c
 #define _GNU_SOURCE
 #include <stdarg.h>
 #include <stdint.h>
@@ -14,7 +14,7 @@
 #define ON_DEMAND 2
 #define MAX_ARGS 20
 
-// Argumente anhand der Protokoll-Signatur einsammeln (wie libwayland intern) und ggf. umschreiben
+// collect the arguments from the protocol signature (like libwayland does internally) and rewrite if needed
 static void collect(struct wl_proxy *proxy, uint32_t opcode, union wl_argument *args, va_list ap) {
     const struct wl_interface *pi = *(const struct wl_interface **)proxy;  // proxy->object.interface
     const char *sig = pi->methods[opcode].signature;
@@ -28,7 +28,7 @@ static void collect(struct wl_proxy *proxy, uint32_t opcode, union wl_argument *
         case 'o': case 'n': args[n++].o = va_arg(ap, struct wl_object *); break;
         case 'a': args[n++].a = va_arg(ap, struct wl_array *); break;
         case 'h': args[n++].h = va_arg(ap, int32_t); break;
-        default: break;  // '?' und Versionsziffern
+        default: break;  // '?' and version digits
         }
     }
     if (opcode == SET_KEYBOARD_INTERACTIVITY && strcmp(pi->name, "zwlr_layer_surface_v1") == 0

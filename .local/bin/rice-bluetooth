@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Waybar-Rechtsklick: TUI-App "bluetooth" ein-/ausblenden (~/.local/share/rice-apps/ricetui.py).
-# Der Prozess läuft dauerhaft im Hintergrund (Start aus hyprland.lua), ein Klick schreibt nur
-# den Namen in seine Leitung – darum erscheint das Fenster sofort. Optional: rice-bluetooth <tab|hide>.
-# Kein pkill hier (kostet bis zu 100 ms) – offene Menüs schließt der Hintergrund-Prozess selbst.
+# Waybar right click: show/hide the TUI app "bluetooth" (~/.local/share/rice-apps/ricetui.py).
+# The process runs permanently in the background (start from hyprland.lua), a click only writes
+# the name into its pipe – so the window appears instantly. Optional: rice-bluetooth <tab|hide>.
+# No pkill here (costs up to 100 ms) – the background process closes open menus itself.
 fifo=$XDG_RUNTIME_DIR/rice-tui.fifo
 read -r pid < "$XDG_RUNTIME_DIR/rice-tui.pid" 2>/dev/null
 if [[ -n $pid && -p $fifo ]] && kill -0 "$pid" 2>/dev/null; then

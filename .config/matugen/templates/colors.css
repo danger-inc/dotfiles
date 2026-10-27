@@ -1,4 +1,4 @@
-/* Automatisch erzeugt von matugen aus {{image}}. Nicht von Hand bearbeiten, */
+/* Generated automatically by matugen from {{image}}. Do not edit by hand, */
 /* Vorlage: ~/.config/matugen/templates/colors.css */
 
 @define-color background {{colors.surface.default.hex}};
@@ -12,7 +12,7 @@
 @define-color surface_container {{colors.surface_container.default.hex}};
 @define-color outline {{colors.outline.default.hex}};
 
-/* Kompatibel zu den bisherigen pywal-Namen */
+/* Compatible with the previous pywal names */
 @define-color color0 {{colors.surface.default.hex}};
 @define-color color1 {{colors.primary.default.hex}};
 @define-color color2 {{colors.secondary.default.hex}};

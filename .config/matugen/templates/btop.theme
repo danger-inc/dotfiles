@@ -1,5 +1,5 @@
-# btop-Farben aus dem aktuellen Wallpaper (matugen). Nicht von Hand bearbeiten,
-# Vorlage: ~/.config/matugen/templates/btop.theme
+# btop colors from the current wallpaper (matugen). Do not edit by hand,
+# Template: ~/.config/matugen/templates/btop.theme
 theme[main_bg]="{{colors.surface.default.hex}}"
 theme[main_fg]="{{colors.on_surface.default.hex}}"
 theme[title]="{{colors.primary.default.hex}}"
@@ -15,7 +15,7 @@ theme[mem_box]="{{colors.secondary.default.hex}}"
 theme[net_box]="{{colors.tertiary.default.hex}}"
 theme[proc_box]="{{colors.primary.default.hex}}"
 theme[div_line]="{{colors.outline_variant.default.hex}}"
-# Verläufe: ruhig -> Akzent -> Warnfarbe bei hoher Last
+# gradients: calm -> accent -> warning color at high load
 theme[temp_start]="{{colors.secondary.default.hex}}"
 theme[temp_mid]="{{colors.primary.default.hex}}"
 theme[temp_end]="{{colors.error.default.hex}}"

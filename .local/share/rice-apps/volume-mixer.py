@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-# Lautstärke-Mixer der Waybar (Linksklick aufs Lautsprecher-Icon): Karte unter dem Icon mit
-# Gesamtlautstärke, Ausgabegerät, einem Regler pro App, die gerade Ton abspielt, und Mikrofon.
-# Live über "pactl subscribe", Farben aus matugen, durchscheinend mit Blur (layer_rule "blur-volume-mixer").
+# Volume mixer of the waybar (left click on the speaker icon): card under the icon with
+# master volume, output device, one slider per app that is playing sound, and microphone.
+# Live via "pactl subscribe", colors from matugen, translucent with blur (layer_rule "blur-volume-mixer").
 #
-# Läuft dauerhaft im Hintergrund (gestartet aus hyprland.lua), damit der Klick sofort wirkt:
-#   SIGUSR1 = ein-/ausblenden (Waybar-Klick), SIGUSR2 = ausblenden (anderes Menü, Klick daneben).
-# Sichtbar = Datei $XDG_RUNTIME_DIR/volume-mixer-open existiert (für menu-close-outside.sh),
-# PID steht in $XDG_RUNTIME_DIR/volume-mixer.pid.
+# Runs permanently in the background (started from hyprland.lua) so the click works instantly:
+#   SIGUSR1 = show/hide (waybar click), SIGUSR2 = hide (other menu, click outside).
+# Visible = file $XDG_RUNTIME_DIR/volume-mixer-open exists (for menu-close-outside.sh),
+# PID is in $XDG_RUNTIME_DIR/volume-mixer.pid.
 #
-# Zwei Flächen: eine unsichtbare, bildschirmfüllende Klick-Fläche (Klick auf ein Fenster schließt nur
-# den Mixer) und darüber die Karte selbst (Namespace "volume-mixer"). Esc schließt ebenfalls.
-# Start nur über ~/.config/waybar/scripts/volume-mixer.sh (LD_PRELOAD für gtk4-layer-shell).
+# Two surfaces: an invisible full-screen click surface (a click on a window only closes
+# the mixer) and above it the card itself (namespace "volume-mixer"). Esc closes it as well.
+# Start only through ~/.config/waybar/scripts/volume-mixer.sh (LD_PRELOAD for gtk4-layer-shell).
 import json, os, signal, socket, subprocess, sys, threading, time
 
 import gi
@@ -21,22 +21,22 @@ from gi.repository import Gtk4LayerShell as Layer
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rice_i18n; rice_i18n.install()
 
-WIDTH = 380          # tatsächliche Kartenbreite inkl. Rahmen
-BAR_MARGIN = 50      # margin-left/-right der Waybar (config.jsonc)
+WIDTH = 380          # actual card width including border
+BAR_MARGIN = 50      # margin-left/-right of the waybar (config.jsonc)
 RUNTIME = GLib.get_user_runtime_dir()
 OPEN_FLAG = RUNTIME + "/volume-mixer-open"
-PID_FILE = RUNTIME + "/volume-mixer.pid"   # Skripte schicken Signale per kill statt (langsamem) pkill -f
+PID_FILE = RUNTIME + "/volume-mixer.pid"   # scripts send signals with kill instead of (slow) pkill -f
 MENU_OPENED = RUNTIME + "/waybar-menu-opened"
 MATUGEN_CSS = os.path.expanduser("~/.cache/ist/colors.css")
 FALLBACK = ("@define-color background #1a120d; @define-color foreground #f0dfd7; @define-color color9 #ffb68e;"
             "@define-color primary #ffb68e; @define-color on_primary #532200; @define-color secondary #e5bfa9;")
-MODE_FILE = RUNTIME + "/volume-mixer-mode"   # „audio“ (Lautsprecher-Klick) oder „bright“ (Helligkeits-Klick)
+MODE_FILE = RUNTIME + "/volume-mixer-mode"   # "audio" (speaker click) or "bright" (brightness click)
 BACKLIGHT = next((os.path.join("/sys/class/backlight", d) for d in sorted(os.listdir("/sys/class/backlight"))), None) if os.path.isdir("/sys/class/backlight") else None
 CSS = """
-/* -ist-Look wie scourge, notist, datist, musicalist und der Starter: dunkle Glasfläche, 1-px-Rahmen,
-   kleine Abschnittstitel in der Akzentfarbe, flache Regler (4-px-Spur, schmaler Riegel). Altes Design: *.bak-ist */
+/* -ist look like scourge, notist, datist, musicalist and the launcher: dark glass surface, 1 px border,
+   small section titles in the accent color, flat sliders (4 px track, narrow latch). Old design: *.bak-ist */
 window.catcher { background: none; }
-/* Blur: wie bei swaync am ganzen Fenster anmelden (an der Karte greift es wegen der Einblend-Animation nicht) */
+/* Blur: register on the whole window like swaync (on the card it does not work because of the fade-in animation) */
 window.mixer { background: none; backdrop-filter: blur(10px); }
 .card {
     background-color: alpha(@background, 0.85);
@@ -95,7 +95,7 @@ def run(*cmd):
 
 
 def hypr(cmd):
-    """Direkt über den Hyprland-Socket statt hyprctl (spart einen Prozessstart)."""
+    """Directly through the Hyprland socket instead of hyprctl (saves a process start)."""
     path = f"{RUNTIME}/hypr/{os.environ.get('HYPRLAND_INSTANCE_SIGNATURE', '')}/.socket.sock"
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
         s.connect(path)
@@ -118,8 +118,8 @@ def vol_icon(vol, muted):
 
 
 class Row(Gtk.Box):
-    """Symbol (Klick = stumm), Name, Prozent, Regler. setter(vol) / muter() führen die Aktion aus.
-    icon: festes Zeichen; None = Lautsprecher-Symbol je nach Lautstärke."""
+    """Icon (click = mute), name, percent, slider. setter(vol) / muter() perform the action.
+    icon: fixed character; None = speaker icon depending on the volume."""
 
     def __init__(self, name, icon, setter, muter, icon_name=None, mute_icon=None):
         super().__init__(spacing=10)
@@ -166,7 +166,7 @@ class Row(Gtk.Box):
     def update(self, vol, muted):
         (self.add_css_class if muted else self.remove_css_class)("muted")
         self.set_icon(vol, muted)
-        if time.monotonic() < self.busy_until:  # Nutzer zieht gerade: nicht dazwischenfunken
+        if time.monotonic() < self.busy_until:  # user is dragging right now: do not interfere
             return
         self.pct.set_label(f"{vol}%")
         self._sync = True
@@ -180,7 +180,7 @@ class Row(Gtk.Box):
         self.pct.set_label(f"{vol}%")
         self.set_icon(vol, self.has_css_class("muted"))
         self.busy_until = time.monotonic() + 0.5
-        if self.pending is None:  # beim Ziehen höchstens alle 40 ms an PipeWire schicken
+        if self.pending is None:  # while dragging send to PipeWire at most every 40 ms
             GLib.timeout_add(40, self.flush)
         self.pending = vol
 
@@ -201,7 +201,7 @@ class Mixer(Gtk.Application):
         self.refresh_id = None
 
     def do_activate(self):
-        self.hold()  # läuft auch ohne sichtbares Fenster weiter
+        self.hold()  # keeps running even without a visible window
         self.css = Gtk.CssProvider()
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), self.css,
                                                   Gtk.STYLE_PROVIDER_PRIORITY_USER)
@@ -209,7 +209,7 @@ class Mixer(Gtk.Application):
         self.mon = Gio.File.new_for_path(MATUGEN_CSS).monitor_file(Gio.FileMonitorFlags.NONE, None)
         self.mon.connect("changed", lambda *_: GLib.timeout_add(150, lambda: self.load_css() and False))
 
-        # Unsichtbare Klick-Fläche: spart die Waybar aus (exclusive 0), Klick darauf schließt
+        # invisible click surface: leaves the waybar out (exclusive 0), a click on it closes
         self.catcher = Gtk.Window(application=self)
         self.catcher.add_css_class("catcher")
         Layer.init_for_window(self.catcher)
@@ -269,7 +269,7 @@ class Mixer(Gtk.Application):
                        mute_icon="󰍭")
         card.append(self.mic)
 
-        # Helligkeit (Klick auf das Helligkeits-Modul): eigener Inhalt in derselben Karte
+        # brightness (click on the brightness module): own content in the same card
         self.bright_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=False)
         outer.append(self.bright_box)
         self.bright_box.append(self.section("bildschirm"))
@@ -300,7 +300,7 @@ class Mixer(Gtk.Application):
         threading.Thread(target=self.listen, daemon=True).start()
         if self.show_now:
             self.show()
-        else:  # einmal unsichtbar vorbereiten, damit schon der erste Klick sofort wirkt
+        else:  # prepare once invisibly so that even the first click works instantly
             self.win.set_opacity(0)
             self.win.set_visible(True)
             GLib.timeout_add(300, self.prewarm_done)
@@ -320,7 +320,7 @@ class Mixer(Gtk.Application):
         self.quit()
         return False
 
-    # ---------- Ein-/Ausblenden ----------
+    # ---------- show/hide ----------
     def set_flag(self, on):
         try:
             if on:
@@ -367,7 +367,7 @@ class Mixer(Gtk.Application):
         self.bright.update(v, False)
         self.bright.set_icon(v, False)
         self.bright.btn.set_label("󰃞" if v < 34 else "󰃟" if v < 67 else "󰃠")
-        return self.win.get_visible() and self.mode == "bright"   # weiterpollen, solange sichtbar
+        return self.win.get_visible() and self.mode == "bright"   # keep polling while visible
 
     def toggle(self):
         mode = self.read_mode()
@@ -378,8 +378,8 @@ class Mixer(Gtk.Application):
         return True
 
     def hide_request(self):
-        # Klick aufs andere Icon (Lautstärke <-> Helligkeit): menu-close-outside.sh läuft parallel
-        # und kann sein Ausblenden erst nach dem Umschalten schicken – das dann ignorieren.
+        # click on the other icon (volume <-> brightness): menu-close-outside.sh runs in parallel
+        # and may only send its hide after the switch – ignore that then.
         if time.monotonic() - self.shown_at > 0.5:
             self.hide()
         return True
@@ -387,11 +387,11 @@ class Mixer(Gtk.Application):
     def show(self):
         self.shown_at = time.monotonic()
         try:
-            with open(MENU_OPENED, "w") as f:  # Klick aufs Icon soll den Mixer nicht gleich wieder schließen
+            with open(MENU_OPENED, "w") as f:  # a click on the icon must not close the mixer right away
                 f.write(f"{int(time.time() * 1000)} mixer")
         except OSError:
             pass
-        run("pkill", "-x", "wofi|rofi")  # andere Menüs samt ihrer Klick-Sperre zu
+        run("pkill", "-x", "wofi|rofi")  # close other menus together with their click lock
         run("pkill", "-f", "python3 .*click-catcher\\.py")
         self.set_mode(self.read_mode())
         if self.mode == "bright" and self.bright_poll is None:
@@ -413,7 +413,7 @@ class Mixer(Gtk.Application):
         self.set_flag(False)
 
     def position(self):
-        """x-Abstand: zentriert unter dem Mauszeiger (= dem Icon), nicht über die Waybar hinaus."""
+        """x offset: centered under the mouse pointer (= the icon), not beyond the waybar."""
         try:
             cur = hypr("cursorpos")
             mon = next(m for m in hypr("monitors") if m["focused"])
@@ -432,7 +432,7 @@ class Mixer(Gtk.Application):
         self.css.load_from_string(css + CSS)
 
     def listen(self):
-        while True:  # pactl neu starten, falls PipeWire neu startet
+        while True:  # restart pactl in case PipeWire restarts
             p = subprocess.Popen(["pactl", "subscribe"], stdout=subprocess.PIPE, text=True)
             for line in p.stdout:
                 if any(w in line for w in ("sink", "source", "server")):
@@ -445,7 +445,7 @@ class Mixer(Gtk.Application):
             self.refresh_id = GLib.timeout_add(40, self.refresh)
         return False
 
-    # ---------- Daten aus PipeWire übernehmen ----------
+    # ---------- take data from PipeWire ----------
     def refresh(self):
         self.refresh_id = None
         default_sink = pactl("get-default-sink").strip()
@@ -487,7 +487,7 @@ class Mixer(Gtk.Application):
             (b.add_css_class if name == default else b.remove_css_class)("active")
 
     def update_apps(self, inputs):
-        # Systemklänge und Pegelmesser (z. B. von pavucontrol) ausblenden
+        # hide system sounds and level meters (e.g. from pavucontrol)
         inputs = [i for i in inputs if i["properties"].get("media.role") != "event"
                   and "peak" not in i["properties"].get("media.name", "").lower()]
         keys = [i["index"] for i in inputs]

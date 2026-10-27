@@ -1,4 +1,4 @@
-# offizielle Arch-Repos:  grep -v '^#' packages.txt | sudo pacman -S --needed -
+# official Arch repos:  grep -v '^#' packages.txt | sudo pacman -S --needed -
 # Desktop
 hyprland
 hyprlock
@@ -22,7 +22,7 @@ fish
 starship
 btop
 fastfetch
-# Werkzeuge, die Skripte und Tastenkürzel aufrufen
+# tools that scripts and shortcuts call
 grim
 slurp
 wf-recorder
@@ -40,7 +40,7 @@ bluez-utils
 pipewire
 pipewire-pulse
 wireplumber
-# Schrift und Grundlagen der -ist-Apps
+# font and basics of the -ist apps
 ttf-jetbrains-mono-nerd
 noto-fonts-emoji
 gtk4

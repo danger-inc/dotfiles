@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Eigene rofi-Modi für den Starter (Super+R) im -ist-Look.
+"""Own rofi modes for the launcher (Super+R) in the -ist look.
 
-    ist.py fenster   offene Fenster (Hyprland) – Enter springt hin
-    ist.py rechner   qalc: Ausdruck tippen + Enter rechnet (Einheiten, Prozent, Währungen); Enter auf Ergebnis kopiert
-    ist.py ablage    Zwischenablage-Verlauf (cliphist) – Enter kopiert erneut
-    ist.py zeichen   Emoji und Sonderzeichen (englische Unicode-Namen + deutsche Stichwörter) – Enter kopiert
-    ist.py web       Websuche: Text + Enter (Kürzel: g, yt, w, gh, aw, maps, dict), Adressen öffnen direkt
-    ist.py system    Sperren, Bereitschaft, Neustart, Ausschalten, WLAN/Bluetooth/Nicht stören, Wallpaper, …
+    ist.py fenster   open windows (Hyprland) – Enter jumps there
+    ist.py rechner   qalc: type an expression + Enter calculates (units, percent, currencies); Enter on the result copies
+    ist.py ablage    clipboard history (cliphist) – Enter copies again
+    ist.py zeichen   emoji and special characters (english unicode names + german keywords) – Enter copies
+    ist.py web       web search: text + Enter (prefixes: g, yt, w, gh, aw, maps, dict), addresses open directly
+    ist.py system    lock, suspend, restart, shut down, wifi/bluetooth/do not disturb, wallpaper, …
 
-rofi-Skriptmodus: ohne Auswahl wird die Liste ausgegeben; nach einer Auswahl ruft rofi das Skript erneut auf
-(ROFI_RETV 1 = Zeile, 2 = eigene Eingabe, ROFI_INFO = verstecktes Feld der Zeile). Keine Ausgabe = rofi schließt.
+rofi script mode: without a selection the list is printed; after a selection rofi calls the script again
+(ROFI_RETV 1 = row, 2 = custom input, ROFI_INFO = hidden field of the row). No output = rofi closes.
 """
 import json
 import os
@@ -62,7 +62,7 @@ def esc(t):
 
 
 def detach(*cmd, stdin=None):
-    """Programm unabhängig von rofi starten (rofi wartet sonst auf die Ausgabe)."""
+    """Start a program independently of rofi (otherwise rofi waits for the output)."""
     p = subprocess.Popen(list(cmd), stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     if stdin is not None:
@@ -98,7 +98,7 @@ def fenster():
     clients.sort(key=lambda c: (c.get("focusHistoryID", 99)))
     for c in clients:
         if c.get("address") == active:
-            continue          # das Fenster, aus dem man kommt, steht nicht zur Wahl
+            continue          # the window you come from is not offered
         cls = c.get("class") or c.get("initialClass") or "?"
         ws = c.get("workspace", {}).get("name", "?")
         ws = "spezial" if str(ws).startswith("special") else ws
@@ -115,7 +115,7 @@ def short_class(cls):
 
 
 def icon_for(cls):
-    """Icon-Name aus der .desktop-Datei der Fensterklasse (StartupWMClass oder Dateiname)."""
+    """Icon name from the .desktop file of the window class (StartupWMClass or file name)."""
     cache = os.path.join(RUN, "rofi-ist-icons.json")
     try:
         icons = json.load(open(cache))
@@ -169,10 +169,10 @@ def rechner():
     if RETV == 2 and ARG.strip():
         expr = ARG.strip()
         import re
-        q = re.sub(r"%\s*(von|of)\s+", "% * ", expr)               # 12% von 80
-        q = re.sub(r"\s(in|nach|zu)\s(?=[^\d\s])", " to ", q)    # 5 km in mi (nicht: „in“ = Zoll)
+        q = re.sub(r"%\s*(von|of)\s+", "% * ", expr)               # 12% of 80
+        q = re.sub(r"\s(in|nach|zu)\s(?=[^\d\s])", " to ", q)    # 5 km in mi (not: "in" = inch)
         q = re.sub(r"\bto\s+(?!-|\+|dec\b|hex\b|bin\b|oct\b|base|roman|time\b|frac|mixed|sci|utc|cet)([A-Za-z€$£]\w*)",
-                   r"to -\1", q)                                     # „3,1 mi“ statt „3 mi + 188 yd + …“
+                   r"to -\1", q)                                     # "3.1 mi" instead of "3 mi + 188 yd + …"
         q = re.sub(r"\bmal\b", "*", q)
         q = re.sub(r"\bgeteilt durch\b", "/", q)
         res = sh("qalc", "-t", "-set", "decimal comma on", q, timeout=8).strip().splitlines()
@@ -220,7 +220,7 @@ def ablage():
 
 
 # ---------------------------------------------------------------- zeichen
-DE = {  # deutsche Stichwörter zusätzlich zu den englischen Namen
+DE = {  # german keywords in addition to the english names
     "😀": "lachen grinsen", "😂": "tränen lachen", "😊": "lächeln", "😍": "verliebt herzaugen", "🤔": "nachdenken",
     "😢": "weinen traurig", "😭": "heulen", "😡": "wütend", "😴": "schlafen müde", "🙏": "bitte danke beten",
     "👍": "daumen hoch gut", "👎": "daumen runter schlecht", "👏": "klatschen applaus", "🙌": "hurra", "💪": "stark muskel",
@@ -349,7 +349,7 @@ def system():
     }
     confirm = {"reboot": "neu starten", "poweroff": "ausschalten", "logout": "abmelden"}
     if RETV == 1 and act:
-        if act in confirm:                     # erst nachfragen
+        if act in confirm:                     # ask first
             opt("markup-rows", "true")
             opt("no-custom", "true")
             opt("message", tr("wirklich <b>{}</b>? offene programme werden beendet.").replace("{}", tr(confirm[act])))
@@ -367,7 +367,7 @@ def system():
     opt("markup-rows", "true")
     opt("no-custom", "true")
     from concurrent.futures import ThreadPoolExecutor
-    with ThreadPoolExecutor(3) as ex:      # die drei Abfragen gleichzeitig (bluetoothctl allein ~40 ms)
+    with ThreadPoolExecutor(3) as ex:      # the three queries at the same time (bluetoothctl alone ~40 ms)
         f_wifi = ex.submit(state, ["nmcli", "radio", "wifi"], ["enabled"])
         f_bt = ex.submit(state, ["bluetoothctl", "show"], ["powered: yes"])
         f_dnd = ex.submit(lambda: sh("swaync-client", "-D").strip() == "true")

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Super+W: zufälliges Hintergrundbild (nie das aktuelle) + passende Systemfarben
-# Eigene Bilder: ~/.config/wallpapers (wallist verwaltet den Ordner). Ist er leer, wird das mitgelieferte Bild kopiert.
+# Super+W: random wallpaper (never the current one) + matching system colors
+# Own images: ~/.config/wallpapers (wallist manages the folder). If it is empty, the bundled image is copied.
 
 dir=~/.config/wallpapers
 mkdir -p "$dir"
@@ -10,7 +10,7 @@ fi
 
 current=$(cat ~/.cache/matugen/wallpaper 2>/dev/null)
 wall=$(find "$dir" -type f ! -path "$current" | shuf -n 1)
-[ -n "$wall" ] || wall=$(find "$dir" -type f | shuf -n 1)   # nur ein Bild vorhanden
+[ -n "$wall" ] || wall=$(find "$dir" -type f | shuf -n 1)   # only one image available
 [ -n "$wall" ] || exit 1
 
 awww img "$wall"

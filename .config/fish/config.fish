@@ -1,5 +1,5 @@
 if status is-interactive
-   #irgendwas
+   #something
 end
 
 

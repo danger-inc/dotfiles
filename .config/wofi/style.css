@@ -1,6 +1,6 @@
-/* wofi: WLAN- und Bluetooth-Menü der Waybar im -ist-Look (scourge, notist, datist, musicalist, Starter):
-   dunkle Glasfläche, 1-px-Rahmen in der Akzentfarbe, 4–6 px Rundung, Auswahl wie die Reiter der Apps.
-   Farben aus matugen (Super+W), Blur von Hyprland (layer_rule "blur-wofi"). Altes Design: style.css.bak-ist */
+/* wofi: wifi and bluetooth menu of the waybar in the -ist look (scourge, notist, datist, musicalist, launcher):
+   dark glass surface, 1 px border in the accent color, 4–6 px rounding, selection like the tabs of the apps.
+   Colors from matugen (Super+W), blur from Hyprland (layer_rule "blur-wofi"). Old design: style.css.bak-ist */
 @import url('@HOME@/.cache/ist/colors.css');
 
 * {
@@ -20,7 +20,7 @@ window { margin: 0; background-color: transparent; border: none; }
   box-shadow: none;
 }
 
-/* Such-/Passwortfeld wie die Eingabefelder der Apps */
+/* search/password field like the input fields of the apps */
 #input {
   margin: 2px 6px 8px 6px;
   padding: 5px 10px;
@@ -42,7 +42,7 @@ window { margin: 0; background-color: transparent; border: none; }
 #inner-box { margin: 0 4px 2px 4px; padding: 0; border: none; background-color: transparent; }
 #scroll { margin: 0; border: none; background-color: transparent; }
 
-/* Einträge: Auswahl wie ein aktiver Reiter (Akzent 22 %), Drüberfahren dezenter */
+/* entries: selection like an active tab (accent 22 %), hover more subtle */
 #entry {
   margin: 1px 0;
   padding: 1px 4px;

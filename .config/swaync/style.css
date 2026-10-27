@@ -1,7 +1,7 @@
-/* Benachrichtigungen (swaync): Kontrollzentrum + Popups im Look der eigenen Apps (scourge, notist, datist,
-   musicalist) und der Waybar: dunkle Glasfläche, 1-px-Rahmen in der Akzentfarbe, 4–6 px Rundung, flache Knöpfe,
-   schmale Regler, kleine Überschriften in der Akzentfarbe. Farben aus matugen (Super+W), Blur von Hyprland.
-   swaync lädt vorher /etc/xdg/swaync/style.css, hier wird nur überschrieben. Altes Design: style.css.bak-ist */
+/* Notifications (swaync): control center + popups in the look of the own apps (scourge, notist, datist,
+   musicalist) and the waybar: dark glass surface, 1 px border in the accent color, 4–6 px rounding, flat buttons,
+   narrow sliders, small headings in the accent color. Colors from matugen (Super+W), blur from Hyprland.
+   swaync loads /etc/xdg/swaync/style.css first, this only overrides. Old design: style.css.bak-ist */
 @import url("@HOME@/.cache/ist/colors.css");
 
 :root {
@@ -30,7 +30,7 @@
 
 .widget { margin: 4px 10px; padding: 0; }
 
-/* ---------- Schnellschalter: wie die [ knöpfe ] der Apps ---------- */
+/* ---------- quick toggles: like the [ buttons ] of the apps ---------- */
 .widget-buttons-grid { padding: 2px 0 4px 0; }
 .widget-buttons-grid flowboxchild { padding: 0 2px; }
 .widget-buttons-grid flowboxchild > button {
@@ -55,7 +55,7 @@
 }
 .widget-buttons-grid flowboxchild > button.toggle:checked:hover { background: @primary; color: @on_primary; }
 
-/* ---------- Regler: flach, 4-px-Spur, schmaler Riegel (wie in scourge/musicalist) ---------- */
+/* ---------- sliders: flat, 4 px track, narrow latch (like in scourge/musicalist) ---------- */
 .widget-volume, .widget-backlight {
   background: transparent;
   border: 1px solid var(--line-dim);
@@ -111,7 +111,7 @@ scale slider {
 .widget-mpris .widget-mpris-player .mpris-overlay > box > button:hover { background: @primary; color: @on_primary; }
 .widget-mpris > box > button { color: @primary; }
 
-/* ---------- Kopfzeile: Titel (wie ein Kastentitel) + alle löschen ---------- */
+/* ---------- header: title (like a box title) + clear all ---------- */
 .widget-title {
   margin-top: 12px;
   padding: 0 2px 0 4px;
@@ -133,7 +133,7 @@ scale slider {
 }
 .widget-title > button:hover { background: @primary; border-color: @primary; color: @on_primary; }
 
-/* ---------- Nicht stören: eckiger Schalter wie in den Apps ---------- */
+/* ---------- do not disturb: square switch like in the apps ---------- */
 .widget-dnd { margin-top: 2px; margin-bottom: 4px; padding: 0 2px 0 4px; }
 .widget-dnd label { font-size: 12px; color: var(--dim); }
 .widget-dnd switch {
@@ -154,7 +154,7 @@ scale slider {
 }
 .widget-dnd switch:checked slider { background: @on_primary; }
 
-/* ---------- Liste ---------- */
+/* ---------- list ---------- */
 .control-center .control-center-list { background: transparent; min-height: 60px; }
 .control-center .control-center-list-placeholder {
   color: var(--dim);
@@ -164,7 +164,7 @@ scale slider {
 }
 .control-center .control-center-list .notification { box-shadow: none; }
 
-/* ---------- Einzelne Benachrichtigung (Panel + Popups) ---------- */
+/* ---------- single notification (panel + popups) ---------- */
 .control-center .control-center-list row,
 .control-center .control-center-list row:focus,
 .control-center .control-center-list row:hover,
@@ -218,7 +218,7 @@ scale slider {
   color: @on_primary;
 }
 
-/* ✕ wie in den Apps: Hover in der dritten Farbe */
+/* ✕ like in the apps: hover in the third color */
 .close-button {
   background: transparent;
   color: alpha(@foreground, 0.6);
@@ -231,7 +231,7 @@ scale slider {
 }
 .close-button:hover { background: @tertiary; color: @background; }
 
-/* ---------- Gruppen (mehrere Meldungen derselben App) ---------- */
+/* ---------- groups (several messages of the same app) ---------- */
 .notification-group { margin: 0; }
 .notification-group .notification-group-headers { color: @primary; margin: 6px 14px 2px 14px; font-size: 12px; }
 .notification-group .notification-group-buttons button {
@@ -246,7 +246,7 @@ scale slider {
   border-color: alpha(@primary, 0.12);
 }
 
-/* ---------- Popups oben rechts: rechte Kante bündig mit der Waybar ---------- */
+/* ---------- popups top right: right edge flush with the waybar ---------- */
 notificationwindow { backdrop-filter: blur(10px); }
 .floating-notifications { margin: 0 50px 0 0; }
 .floating-notifications .notification-row .notification-background { padding: 5px 0; }

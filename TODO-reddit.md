@@ -21,7 +21,7 @@ Test: frisches Arch-Rootfs (~/.cache/suite-installtest/arch), alle App-Installer
 - [x] 14. matugen/config.toml: Zen-Profilpfad `ikm0rhe8.Default (release)` (persönlich, legt Müllordner an) → entfernen/optional
 - [x] 15. install.sh meldet immer „Probelauf“ (`${DRY:+…}` bei DRY=0)
 - [x] 16. README-Widersprüche: Quickshell vs Waybar, rofi/wofi/waybar-Erklärung, Hook-Hinweis
-- [x] 17. Installer/READMEs englisch; Laufzeit-Texte per rice_i18n.py (de/en, ~/.config/rice-lang), statische per i18n-static.sed in sync.sh. Offen: Code-Kommentare noch deutsch (~500 Zeilen)
+- [x] 17. Installer/READMEs englisch; Laufzeit-Texte per rice_i18n.py (de/en, ~/.config/rice-lang), statische per i18n-static.sed in sync.sh. Code-Kommentare ebenfalls englisch (2026-10-27)
 - [x] 18. divist: Autostart nur wenn installiert (test -x); rechner-Modus nutzt qalc (libqalculate ergänzt). Ob divist öffentlich wird: deine Entscheidung
 - [x] 19. Hartkodiert: kb_layout de, tty1 `exec Hyprland` in config.fish → im README erwähnen
 - [x] 20. README `yay -S --needed - < packages.txt` bricht bei unbekanntem Paket ab; yay nicht vorinstalliert → Repo-/AUR-Pakete trennen

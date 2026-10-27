@@ -1,7 +1,7 @@
 #!/bin/bash
-# Läuft im btop-Fenster. Super+W lädt die Farben inzwischen live per SIGUSR2 nach (apply-colors.sh),
-# die Neustart-Schleife ist nur noch ein Fallback: liegt die Markierung vor, startet btop neu,
-# sonst geht das Fenster nach q ganz normal zu.
+# Runs in the btop window. Super+W now reloads the colors live via SIGUSR2 (apply-colors.sh),
+# the restart loop is only a fallback: if the marker is present btop restarts,
+# otherwise the window closes normally after q.
 mark="${XDG_RUNTIME_DIR:-/tmp}/btop-farben-neu"
 while true; do
     btop

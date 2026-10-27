@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Waybar-Look reihum wechseln (Klick auf „|“ in der Leiste):
+# Cycle the waybar look (click on "|" in the bar):
 #   kopfzeile (variants/v3) → reiter (variants/v5) → klassisch (style-classic) → …
-#   style-switch.sh [next|kopfzeile|reiter|klassisch]   – ohne Argument: next
-# Nur das Stylesheet wechselt (Waybar lädt es selbst neu); zwischen neu und klassisch wechselt auch die Config
-# (Symlink config.jsonc), dann wird Waybar neu gestartet (nie per SIGUSR2 – das ließ Waybar abstürzen).
+#   style-switch.sh [next|kopfzeile|reiter|klassisch]   – without argument: next
+# Only the stylesheet changes (waybar reloads it itself); between new and classic the config changes too
+# (symlink config.jsonc), then waybar is restarted (never via SIGUSR2 – that crashed waybar).
 DIR="$HOME/.config/waybar"
 CSS="$DIR/style.css"
 NAMES=(kopfzeile reiter klassisch)

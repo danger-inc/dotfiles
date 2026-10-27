@@ -1,5 +1,5 @@
-/* V3 „App-Kopfzeile“ – eine durchgehende Leiste wie der Kopf von scourge/notist: Uhr als Marken-Chip,
-   Arbeitsflächen als Reiter, sonst schlichter Text */
+/* V3 "app header" – one continuous bar like the head of scourge/notist: clock as brand chip,
+   workspaces as tabs, otherwise plain text */
 @import url("file://@HOME@/.config/waybar/variants/base.css");
 window#waybar > box { background-color: alpha(@background, 0.84); border: 1px solid alpha(@primary, 0.55); border-radius: 6px;
     padding: 0 8px; }

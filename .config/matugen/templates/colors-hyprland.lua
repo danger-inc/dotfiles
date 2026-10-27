@@ -1,4 +1,4 @@
--- Automatisch erzeugt von matugen aus {{image}}
+-- Generated automatically by matugen from {{image}}
 -- Vorlage: ~/.config/matugen/templates/colors-hyprland.lua
 return {
     active1  = "rgba({{colors.primary.default.hex_stripped}}ee)",

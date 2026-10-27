@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Schnellschalter im Benachrichtigungs-Panel (swaync buttons-grid).
-#   toggle.sh <wifi|bluetooth|mute>          schaltet auf $SWAYNC_TOGGLE_STATE (true/false)
-#   toggle.sh <wifi|bluetooth|mute> state    gibt true/false aus (Anzeige beim Öffnen)
-#   toggle.sh lock | power                   Panel schließen, Sperre / Power-Menü öffnen
+# Quick toggles in the notification panel (swaync buttons-grid).
+#   toggle.sh <wifi|bluetooth|mute>          switches to $SWAYNC_TOGGLE_STATE (true/false)
+#   toggle.sh <wifi|bluetooth|mute> state    prints true/false (shown when opening)
+#   toggle.sh lock | power                   close the panel, open lock / power menu
 what=$1 mode=$2
 on=false; [[ $SWAYNC_TOGGLE_STATE == true ]] && on=true
 

@@ -1,7 +1,7 @@
-/* rofi = Starter (Super+R) im -ist-Look wie scourge, notist, datist, musicalist:
-   Kopfzeile mit „starter“-Chip und nummerierten Reitern, Suchfeld und Liste mit 1-px-Rahmen, Statuszeile mit
-   Tastenhinweisen. Farben vom Wallpaper (matugen), Blur von Hyprland (layer_rule "blur-rofi").
-   Eigene Modi: ~/.config/rofi/modes/ist.py. Altes Design: config.rasi.bak-ist */
+/* rofi = launcher (Super+R) in the -ist look like scourge, notist, datist, musicalist:
+   Header with "starter" chip and numbered tabs, search field and list with 1 px border, status line with
+   key hints. Colors from the wallpaper (matugen), blur from Hyprland (layer_rule "blur-rofi").
+   Own modes: ~/.config/rofi/modes/ist.py. Old design: config.rasi.bak-ist */
 configuration {
     modi:                       "drun,fenster:~/.config/rofi/modes/ist.sh fenster,filebrowser,rechner:~/.config/rofi/modes/ist.sh rechner,ablage:~/.config/rofi/modes/ist.sh ablage,zeichen:~/.config/rofi/modes/ist.sh zeichen,web:~/.config/rofi/modes/ist.sh web,system:~/.config/rofi/modes/ist.sh system";
     show-icons:                 true;
@@ -12,7 +12,7 @@ configuration {
     matching:                   "fuzzy";
     sort:                       true;
     sorting-method:             "fzf";
-    drun-use-desktop-cache:     true;      /* .desktop-Dateien nicht bei jedem Start neu einlesen */
+    drun-use-desktop-cache:     true;      /* do not re-read the .desktop files on every start */
     drun-reload-desktop-cache:  false;
     display-drun:               "¹apps";
     display-fenster:            "²windows";
@@ -22,7 +22,7 @@ configuration {
     display-zeichen:            "⁶symbols";
     display-web:                "⁷web";
     display-system:             "⁸system";
-    /* Tab = nächster Modus (wie die Reiter in den Apps), Umschalt+Tab = zurück */
+    /* Tab = next mode (like the tabs in the apps), Shift+Tab = back */
     kb-row-tab:                 "";
     kb-mode-next:               "Tab,Control+Tab,Alt+Right";
     kb-mode-previous:           "ISO_Left_Tab,Control+ISO_Left_Tab,Alt+Left";
@@ -46,8 +46,8 @@ configuration {
 
 window {
     width:                      820px;
-    /* oben fest verankert + feste Höhe: Reiter bleiben beim Wechseln an derselben Stelle (mittig verankert
-       sprang das Fenster mit jeder Listenlänge – ein Klick auf den nächsten Reiter landete daneben und schloss rofi) */
+    /* anchored at the top + fixed height: tabs stay in the same place when switching (when anchored in the middle
+       the window jumped with every list length – a click on the next tab landed beside it and closed rofi) */
     location:                   north;
     anchor:                     north;
     y-offset:                   170px;
@@ -96,7 +96,7 @@ button selected {
     text-color:                 @fg;
 }
 
-/* --- Suchfeld: wie die Eingabefelder der Apps, Zähler rechts (gefiltert/alle) --- */
+/* --- search field: like the input fields of the apps, counter on the right (filtered/all) --- */
 inputbar {
     margin:                     4px 14px 8px 14px;
     padding:                    6px 10px;
@@ -114,7 +114,7 @@ textbox-prompt {
     text-color:                 @fg-accent;
 }
 entry {
-    text-color:                 @fg;        /* sonst rofi-Standard (dunkles Türkis) – kaum lesbar */
+    text-color:                 @fg;        /* otherwise rofi default (dark teal) – hardly readable */
     placeholder:                "search …";
     placeholder-color:          @fg-dim;
     cursor-color:               @fg-accent;
@@ -127,7 +127,7 @@ textbox-sep {
     content:                    "/";
 }
 
-/* --- Hinweis-/Ergebniszeile (Rechner, Websuche, Rückfragen) --- */
+/* --- hint/result line (calculator, web search, confirmations) --- */
 message {
     margin:                     0 14px 8px 14px;
     padding:                    6px 10px;
@@ -140,7 +140,7 @@ textbox {
     markup:                     true;
 }
 
-/* --- Liste --- */
+/* --- list --- */
 listview {
     margin:                     0 8px;
     lines:                      9;
@@ -185,7 +185,7 @@ element-icon {
     cursor:                     inherit;
 }
 
-/* --- Statuszeile mit Tastenhinweisen (wie unten in den Apps) --- */
+/* --- status line with key hints (like at the bottom of the apps) --- */
 footer {
     orientation:                horizontal;
     children:                   [ "textbox-hints" ];

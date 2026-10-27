@@ -1,4 +1,4 @@
-/* V5 „Reiter“ – kompakte Kästen ohne Seitenrahmen, nur eine kräftige Unterkante (wie Tabs) */
+/* V5 "tabs" – compact boxes without side border, only a strong bottom edge (like tabs) */
 @import url("file://@HOME@/.config/waybar/variants/base.css");
 #clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #ws, #custom-power {
     background-color: alpha(@background, 0.82); color: @foreground; border-bottom: 2px solid @primary;
