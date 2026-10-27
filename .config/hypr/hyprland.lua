@@ -69,7 +69,7 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("@HOME@/.local/bin/sharist --daemon")   -- sharist: Quick Share, für Handys sichtbar; Super+D öffnet
     hl.exec_cmd("@HOME@/.local/bin/inquirist --daemon")   -- Starter (Super+R), wartet im Hintergrund
     hl.exec_cmd("@HOME@/.local/bin/linguist --daemon")  -- linguist: Übersetzer, Hover in der Bildschirmecke; Super+T öffnet
-    hl.exec_cmd("@HOME@/.local/bin/divist --daemon")    -- divist: Taschenrechner vorladen; Super+R → rechner öffnet ihn sofort
+    hl.exec_cmd("test -x @HOME@/.local/bin/divist && @HOME@/.local/bin/divist --daemon")    -- divist: Taschenrechner vorladen; Super+R → rechner öffnet ihn sofort
     hl.exec_cmd("@HOME@/.local/bin/wallist --daemon")   -- wallist vorladen: öffnet sofort, „entdecken“ ist schon gefüllt
     hl.exec_cmd("wl-paste --type text --watch cliphist store")    -- Zwischenablage-Verlauf (Starter → ablage, Super+Shift+V)
     hl.exec_cmd("wl-paste --type image --watch cliphist store")

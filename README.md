@@ -15,7 +15,7 @@
 ## setup
 
 * **wm** – [hyprland](https://hyprland.org/), configured in lua (`.config/hypr/hyprland.lua`)
-* **panel / lock / idle** – quickshell (waybar as fallback), hyprlock, hypridle
+* **panel / lock / idle** – [waybar](https://github.com/Alexays/Waybar) (three switchable styles), swaync notifications, hyprlock, hypridle; [rofi](https://github.com/davatorium/rofi) is the launcher (inquirist), wofi the small waybar popup menus
 * **terminal** – kitty with fish and starship, system info with fastfetch
 * **monitoring** – btop
 * **colors** – [matugen](https://github.com/InioX/matugen) turns the current wallpaper into one palette for hyprland borders, kitty, btop, hyprlock and the apps
@@ -72,7 +72,8 @@ packages.txt     arch packages the setup needs (packages-aur.txt: aur ones)
 git clone https://github.com/danger-inc/dotfiles ~/dotfiles
 cd ~/dotfiles
 grep -v '^#' packages.txt | sudo pacman -S --needed -   # dependencies (official repos)
-grep -v '^#' packages-aur.txt | yay -S --needed -      # wlogout, zen-browser (aur)
+# optional, needs an aur helper (yay is not part of arch; install it first, or build the two packages by hand):
+grep -v '^#' packages-aur.txt | yay -S --needed -      # wlogout, zen-browser
 ./install.sh --dry-run                # look first
 ./install.sh                          # all, or: ./install.sh hypr kitty
 ```
@@ -84,6 +85,13 @@ grep -v '^#' packages-aur.txt | yay -S --needed -      # wlogout, zen-browser (a
 * first start: a bundled wallpaper is used and the colors are generated from it. `super+w` picks a random image from `~/.config/wallpapers` (put yours there or use wallist).
 * the apps are separate repos, each with its own `install.sh`; scourge can install the rest from its apps bar.
 
+## good to know
+
+* the keyboard layout is hard-coded to `de` in `hyprland.lua` (`kb_layout`) – change it before the first start.
+* `.config/fish/config.fish` starts Hyprland automatically on tty1 (`exec Hyprland`); delete that block if you use a display manager.
+* autostart launches the -ist apps from `~/.local/bin` if they are installed; missing ones are skipped.
+* `super+l` locks via `~/.config/hypr/lock.sh`; hypridle locks after 10 minutes and turns the screen off after 10.5.
+
 ## keeping it current
 
 ```bash
@@ -91,13 +99,12 @@ grep -v '^#' packages-aur.txt | yay -S --needed -      # wlogout, zen-browser (a
 git add -A && git commit
 ```
 
-the hook in `.githooks/` stops commits that contain `/home/<name>` paths, mail addresses or tokens
+the hook in `.githooks/` (run `python3 .githooks/privacy-check.py` to check by hand) stops commits that contain `/home/<name>` paths, mail addresses or tokens
 (`git config core.hooksPath .githooks` once after cloning).
 
 ## credits
 
 * wallpaper in the screenshots: [Fangpeii](https://www.pixiv.net/artworks/120232182), found on [wallhaven](https://wallhaven.cc/w/rr1kow)
-* the quickshell panel comes from [OmniFormis-Shell](https://github.com/Boing-Git/OmniFormis-Shell) by Boing-Git and is not part of this repo
 * the classic waybar style (`waybar/style-classic.css`) is based on the waybar config of "L€yzS Ricing" by L€yzS, modified
 * the readme layout follows [SeniorMars/dotfiles](https://github.com/SeniorMars/dotfiles).
 

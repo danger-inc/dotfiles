@@ -27,6 +27,7 @@ grim
 slurp
 wf-recorder
 wl-clipboard
+libqalculate
 cliphist
 playerctl
 brightnessctl

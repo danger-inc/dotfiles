@@ -36,7 +36,7 @@ place() {                       # place <relativer Pfad>
     fi
 }
 
-say "== dotfiles installieren ($( ((DRY)) && echo "Probelauf, " )Sicherung: $BACKUP) =="
+say "== installing dotfiles ($( ((DRY)) && echo "dry run, " )backup: $BACKUP) =="
 while read -r name _; do
     [[ -z "$name" || "$name" == \#* ]] && continue
     wanted "$name" || continue
@@ -52,20 +52,20 @@ done < "$SRC/links.txt"
 # Zen-Browser: Theme-Abschnitt in der matugen-Config nur aktivieren, wenn ein Zen-Profil existiert
 M="$HOME/.config/matugen/config.toml"
 if [[ -f "$M" ]] && grep -q '^#ZEN# ' "$M" && wanted ".config/matugen"; then
-    Z=$(sed -n '/^\[Install/,/^$/s/^Default=//p' "$HOME/.config/zen/profiles.ini" 2>/dev/null | head -1)
+    Z=$(sed -n '/^\[Install/,/^$/s/^Default=//p' "$HOME/.config/zen/profiles.ini" 2>/dev/null | head -1 || true)
     if [[ -n "$Z" && -d "$HOME/.config/zen/$Z" ]]; then
         act "sed -i -e 's|@ZENPROFILE@|$Z|' -e 's|^#ZEN# ||' '$M'"
-    else echo "Zen-Browser nicht gefunden – Zen-Theme übersprungen (Abschnitt [templates.zen] in ~/.config/matugen/config.toml)"; fi
+    else echo "Zen browser not found – zen theme skipped (section [templates.zen] in ~/.config/matugen/config.toml)"; fi
 fi
 
 # wofi-Fokus-Fix (LD_PRELOAD) bauen
 W="$HOME/.local/share/rice-apps/wofi-ondemand"
 if [[ -f "$W/wofi-ondemand.c" ]] && wanted ".local/share/rice-apps/wofi-ondemand"; then
     if command -v gcc >/dev/null; then act "gcc -shared -fPIC -O2 -o '$W/wofi-ondemand.so' '$W/wofi-ondemand.c'"
-    else echo "gcc fehlt – wofi-ondemand.so nicht gebaut (Waybar-Menüs schließen sich dann beim Klick auf ein anderes Icon nicht)"; fi
+    else echo "gcc missing – wofi-ondemand.so not built (waybar menus will not close when you click another icon)"; fi
 fi
-[[ -f "$HOME/.local/share/rice-apps/tui.py" ]] || echo "HINWEIS: ~/.local/share/rice-apps/tui.py fehlt – erst eine der -ist-Apps installieren (z. B. wallist, inquirist), die Waybar-Menüs brauchen sie."
+[[ -f "$HOME/.local/share/rice-apps/tui.py" ]] || echo "NOTE: ~/.local/share/rice-apps/tui.py is missing – install one of the -ist apps first (e.g. wallist, inquirist); the waybar menus need it."
 
-say "== fertig =="
-echo "gerenderte Dateien (mit Home-Pfad) sind Kopien: nach Änderungen im Repo ./install.sh erneut ausführen."
-echo "Pakete: siehe packages.txt   ·   Farben erzeugen: Super+W (matugen)"
+say "== done =="
+echo "rendered files (with a home path) are copies: run ./install.sh again after editing them in the repo."
+echo "packages: see packages.txt   ·   generate colors: Super+W (matugen)"

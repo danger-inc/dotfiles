@@ -7,7 +7,7 @@ MAP="$PWD/links.txt"
 while read -r name _; do
     [[ -z "$name" || "$name" == \#* ]] && continue
     src="$HOME/$name"; dst="$PWD/$name"
-    [[ -e "$src" ]] || { echo "fehlt: $name"; continue; }
+    [[ -e "$src" ]] || { echo "missing: $name"; continue; }
     if [[ -d "$src" ]]; then
         mkdir -p "$dst"
         # Backups (.bak-*), Caches und Symlinks bleiben draußen
@@ -26,4 +26,4 @@ done
 # Zen-Profilpfad ist persönlich: Abschnitt auskommentiert ins Repo, install.sh trägt das Profil des Installierenden ein
 sed -i -E '/^\[templates\.zen\]/,/^$/{/^#ZEN# /!s/^(.)/#ZEN# \1/}' .config/matugen/config.toml
 sed -i -E 's|^(#ZEN# output_path = ).*|\1"~/.config/zen/@ZENPROFILE@/chrome/userChrome.css"|' .config/matugen/config.toml
-python3 .githooks/privacy-check.py && echo "sync fertig."
+python3 .githooks/privacy-check.py && echo "sync done."

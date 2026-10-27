@@ -19,12 +19,12 @@ Test: frisches Arch-Rootfs (~/.cache/suite-installtest/arch), alle App-Installer
 - [x] 12. Tote alte Config-Schicht entfernen: hypr/hyprland.conf, hypr/configs/*.conf (wal, grimblast, Ekran Görüntülerim, Kitty-Efeckt mp3, WhiteSur)
 - [x] 13. hyprpaper.conf (windows-11.png), wallpaper-picker*.sh (Live Wallpapers), doppelte lock.sh entfernen
 - [x] 14. matugen/config.toml: Zen-Profilpfad `ikm0rhe8.Default (release)` (persönlich, legt Müllordner an) → entfernen/optional
-- [ ] 15. install.sh meldet immer „Probelauf“ (`${DRY:+…}` bei DRY=0)
-- [ ] 16. README-Widersprüche: Quickshell vs Waybar, rofi/wofi/waybar-Erklärung, Hook-Hinweis
-- [ ] 17. Installer-Ausgaben deutsch, READMEs englisch → vereinheitlichen
-- [ ] 18. divist ist privat, wird aber im Autostart gestartet + inquirist-Modus „rechner“ → öffentlich machen oder aus Autostart/Doku
-- [ ] 19. Hartkodiert: kb_layout de, tty1 `exec Hyprland` in config.fish → im README erwähnen
-- [ ] 20. README `yay -S --needed - < packages.txt` bricht bei unbekanntem Paket ab; yay nicht vorinstalliert → Repo-/AUR-Pakete trennen
+- [x] 15. install.sh meldet immer „Probelauf“ (`${DRY:+…}` bei DRY=0)
+- [x] 16. README-Widersprüche: Quickshell vs Waybar, rofi/wofi/waybar-Erklärung, Hook-Hinweis
+- [x] 17. Installer-Ausgaben deutsch, READMEs englisch → vereinheitlichen
+- [x] 18. divist: Autostart nur wenn installiert (test -x); rechner-Modus nutzt qalc (libqalculate ergänzt). Ob divist öffentlich wird: deine Entscheidung
+- [x] 19. Hartkodiert: kb_layout de, tty1 `exec Hyprland` in config.fish → im README erwähnen
+- [x] 20. README `yay -S --needed - < packages.txt` bricht bei unbekanntem Paket ab; yay nicht vorinstalliert → Repo-/AUR-Pakete trennen
 
 ## Erledigt 2026-10-27 (2–5), noch NICHT committet
 - 2: rice-apps-Dateien + rice-*/volume-osd in links.txt; .local/* wird kopiert statt verlinkt; install.sh baut wofi-ondemand.so (gcc) und warnt, wenn tui.py fehlt (Apps zuerst installieren)
