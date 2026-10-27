@@ -21,7 +21,7 @@ run() {
         if out=$("${@:2}" 2>&1); then
             notify-send -a WLAN "WLAN" "$1"
         else
-            notify-send -a WLAN -u critical "WLAN-Fehler" "$out"
+            notify-send -a WLAN -u critical "Wi-Fi error" "$out"
         fi' _ "$@" >/dev/null 2>&1
 }
 
@@ -29,7 +29,7 @@ entries=()
 declare -A actions ssids secured
 
 if [[ $(nmcli radio wifi) == "enabled" ]]; then
-    label="󰤭  wlan ausschalten"
+    label="󰤭  turn wi-fi off"
     entries+=("$label")
     actions[$label]="toggle-off"
 
@@ -51,7 +51,7 @@ if [[ $(nmcli radio wifi) == "enabled" ]]; then
         [[ -n $security && $security != "--" ]] && lock=" 󰌾"
 
         if [[ $ssid == "$current" ]]; then
-            label="$icon  $ssid$lock  · verbunden – trennen"
+            label="$icon  $ssid$lock  · connected – disconnect"
             actions[$label]="disconnect"
         else
             label="$icon  $ssid$lock"
@@ -65,18 +65,18 @@ if [[ $(nmcli radio wifi) == "enabled" ]]; then
     # Liste sofort aus dem Cache zeigen, im Hintergrund für das nächste Öffnen neu scannen
     setsid -f nmcli device wifi rescan >/dev/null 2>&1
 else
-    label="󰤨  wlan einschalten"
+    label="󰤨  turn wi-fi on"
     entries+=("$label")
     actions[$label]="toggle-on"
 fi
 
-label="󰒓  netzwerkeinstellungen …"
+label="󰒓  network settings …"
 entries+=("$label")
 actions[$label]="settings"
 
 lines=$(( ${#entries[@]} + 1 ))
 (( lines > 12 )) && lines=12
-choice=$(printf '%s\n' "${entries[@]}" | menu --prompt "wlan" --lines "$lines")
+choice=$(printf '%s\n' "${entries[@]}" | menu --prompt "wi-fi" --lines "$lines")
 
 [[ -n $choice && -n ${actions[$choice]} ]] || exit 0
 ssid=${ssids[$choice]}
@@ -94,7 +94,7 @@ case ${actions[$choice]} in
             # Gespeichertes Netz: Passwort ist schon hinterlegt
             run "Verbunden mit $ssid" nmcli connection up id "$ssid"
         elif [[ -n ${secured[$choice]} ]]; then
-            pw=$(menu --password --prompt "passwort für $ssid" --lines 1 </dev/null)
+            pw=$(menu --password --prompt "password for $ssid" --lines 1 </dev/null)
             [[ -n $pw ]] || exit 0
             run "Verbunden mit $ssid" nmcli device wifi connect "$ssid" password "$pw"
         else

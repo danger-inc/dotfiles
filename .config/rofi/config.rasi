@@ -15,11 +15,11 @@ configuration {
     drun-use-desktop-cache:     true;      /* .desktop-Dateien nicht bei jedem Start neu einlesen */
     drun-reload-desktop-cache:  false;
     display-drun:               "¹apps";
-    display-fenster:            "²fenster";
-    display-filebrowser:        "³dateien";
-    display-rechner:            "⁴rechner";
-    display-ablage:             "⁵ablage";
-    display-zeichen:            "⁶zeichen";
+    display-fenster:            "²windows";
+    display-filebrowser:        "³files";
+    display-rechner:            "⁴calc";
+    display-ablage:             "⁵clipboard";
+    display-zeichen:            "⁶symbols";
     display-web:                "⁷web";
     display-system:             "⁸system";
     /* Tab = nächster Modus (wie die Reiter in den Apps), Umschalt+Tab = zurück */
@@ -115,7 +115,7 @@ textbox-prompt {
 }
 entry {
     text-color:                 @fg;        /* sonst rofi-Standard (dunkles Türkis) – kaum lesbar */
-    placeholder:                "suchen …";
+    placeholder:                "search …";
     placeholder-color:          @fg-dim;
     cursor-color:               @fg-accent;
 }
@@ -193,7 +193,7 @@ footer {
     expand:                     false;
 }
 textbox-hints {
-    content:                    "enter <span alpha='55%'>öffnen</span>   tab <span alpha='55%'>nächster modus</span>   strg+⏎ <span alpha='55%'>eingabe übernehmen</span>   esc <span alpha='55%'>schließen</span>";
+    content:                    "enter <span alpha='55%'>open</span>   tab <span alpha='55%'>next mode</span>   ctrl+⏎ <span alpha='55%'>use input</span>   esc <span alpha='55%'>close</span>";
     markup:                     true;
     horizontal-align:           1;
     text-color:                 @fg-accent;

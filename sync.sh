@@ -23,6 +23,9 @@ done < "$MAP"
 grep -rIl "$HOME" --exclude-dir=.git --exclude-dir=.githooks . 2>/dev/null | while read -r f; do
     sed -i "s|$HOME|@HOME@|g" "$f"
 done
+# statische deutsche Beschriftungen im Repo auf Englisch (Live-Config bleibt deutsch)
+sed -i -f i18n-static.sed .config/rofi/config.rasi .config/swaync/config.json .config/waybar/scripts/wifi-menu.sh \
+    .config/waybar/scripts/bluetooth-menu.sh .config/waybar/config-classic.jsonc .config/waybar/config-suite.jsonc .config/hypr/scripts/apply-colors.sh
 # Zen-Profilpfad ist persönlich: Abschnitt auskommentiert ins Repo, install.sh trägt das Profil des Installierenden ein
 sed -i -E '/^\[templates\.zen\]/,/^$/{/^#ZEN# /!s/^(.)/#ZEN# \1/}' .config/matugen/config.toml
 sed -i -E 's|^(#ZEN# output_path = ).*|\1"~/.config/zen/@ZENPROFILE@/chrome/userChrome.css"|' .config/matugen/config.toml

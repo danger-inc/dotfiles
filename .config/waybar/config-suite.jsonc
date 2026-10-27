@@ -134,7 +134,7 @@
         "format-disabled": "󰖪",
         "tooltip-format-wifi": "{essid} ({signalStrength}%)",
         "tooltip-format-ethernet": "{ifname}",
-        "tooltip-format-disconnected": "Nicht verbunden",
+        "tooltip-format-disconnected": "Not connected",
         "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
         "on-click": "~/.config/waybar/scripts/wifi-menu.sh",
         "on-click-right": "~/.local/bin/rice-netz"

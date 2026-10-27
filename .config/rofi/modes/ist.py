@@ -17,6 +17,12 @@ import subprocess
 import sys
 import unicodedata
 
+sys.path.insert(0, os.path.expanduser("~/.local/share/rice-apps"))
+try:
+    from rice_i18n import tr          # German source texts; English on non-German systems
+except ImportError:
+    tr = lambda s: s
+
 MODE = sys.argv[1] if len(sys.argv) > 1 else ""
 ARG = sys.argv[2] if len(sys.argv) > 2 else ""
 RETV = int(os.environ.get("ROFI_RETV", "0"))
@@ -26,10 +32,12 @@ HOME = os.path.expanduser("~")
 
 
 def opt(key, value):
-    sys.stdout.write(f"\0{key}\x1f{value}\n")
+    sys.stdout.write(f"\0{key}\x1f{tr(value) if key == 'message' else value}\n")
 
 
 def row(text, info="", icon="", meta="", nonselectable=False):
+    text = tr(text)
+    meta = f"{meta} {tr(meta)}" if meta and tr(meta) != meta else meta     # search keywords in both languages
     parts = [text]
     extra = []
     if icon:
@@ -46,7 +54,7 @@ def row(text, info="", icon="", meta="", nonselectable=False):
 
 
 def dim(t):
-    return f"<span alpha='55%'>{esc(t)}</span>"
+    return f"<span alpha='55%'>{esc(tr(t))}</span>"
 
 
 def esc(t):
@@ -64,7 +72,7 @@ def detach(*cmd, stdin=None):
 
 def copy(text, what=None):
     detach("wl-copy", stdin=text)
-    detach("notify-send", "-a", "starter", "-t", "1500", f"{what or esc(text[:60])} kopiert")
+    detach("notify-send", "-a", "starter", "-t", "1500", f"{what or esc(text[:60])} {tr('kopiert')}")
 
 
 def sh(*cmd, timeout=3):
@@ -176,7 +184,7 @@ def rechner():
             pass
         opt("message", f"<b>{esc(expr)}</b>  =  <b>{esc(res)}</b>   " + dim("enter kopiert das ergebnis"))
     else:
-        opt("message", "ausdruck tippen + enter: " + dim("12% von 80 · 5 km in mi · sqrt(2) · 100 eur in usd · "
+        opt("message", tr("ausdruck tippen + enter: ") + dim("12% von 80 · 5 km in mi · sqrt(2) · 100 eur in usd · "
                                                         "3h 20min in s · 0x1f in dec"))
     for expr, res in hist:
         row(f"<b>{esc(res)}</b>  {dim('= ' + expr)}", info=res, meta=expr)
@@ -198,7 +206,7 @@ def ablage():
     lines = sh("cliphist", "list", timeout=4).splitlines()
     if not lines:
         running = sh("pgrep", "-f", "cliphist store").strip()
-        opt("message", "verlauf ist leer" + ("" if running else dim(" – der verlauf startet mit der nächsten anmeldung")))
+        opt("message", tr("verlauf ist leer") + ("" if running else dim(" – der verlauf startet mit der nächsten anmeldung")))
         return
     for line in lines[:300]:
         cid, _, prev = line.partition("\t")
@@ -344,8 +352,8 @@ def system():
         if act in confirm:                     # erst nachfragen
             opt("markup-rows", "true")
             opt("no-custom", "true")
-            opt("message", f"wirklich <b>{confirm[act]}</b>? offene programme werden beendet.")
-            row(f"󰄬  ja, {confirm[act]}", info="yes:" + act)
+            opt("message", tr("wirklich <b>{}</b>? offene programme werden beendet.").replace("{}", tr(confirm[act])))
+            row(f"󰄬  {tr('ja')}, {tr(confirm[act])}", info="yes:" + act)
             row("󰜺  abbrechen", info="back")
             return
         if act == "back":
@@ -365,7 +373,7 @@ def system():
         f_dnd = ex.submit(lambda: sh("swaync-client", "-D").strip() == "true")
         f_sun = ex.submit(lambda: bool(sh("which", "hyprsunset").strip()))
     wifi, bt, dnd, has_sun = f_wifi.result(), f_bt.result(), f_dnd.result(), f_sun.result()
-    on = lambda b: "<b>an</b>" if b else dim("aus")
+    on = lambda b: f"<b>{tr('an')}</b>" if b else dim("aus")
     rows = [
         ("󰌾", "sperren", dim("super+l"), "lock", "lock sperren bildschirm"),
         ("󰤄", "bereitschaft", dim("suspend"), "suspend", "schlafen suspend standby"),
@@ -385,7 +393,7 @@ def system():
     if not has_sun:
         rows = [r for r in rows if r[3] != "night"]
     for icon, name, extra, key, meta in rows:
-        row(f"{icon}  {name}  {extra}", info=key, meta=meta)
+        row(f"{icon}  {tr(name)}  {extra}", info=key, meta=meta)
 
 
 if __name__ == "__main__":

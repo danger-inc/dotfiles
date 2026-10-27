@@ -4,7 +4,7 @@
 # Vorlagen und Zuordnung: ~/.config/matugen/config.toml
 
 img=$1
-[[ -f $img ]] || { echo "Bild nicht gefunden: $img" >&2; exit 1; }
+[[ -f $img ]] || { echo "Image not found: $img" >&2; exit 1; }
 
 matugen image "$img" -m dark --source-color-index 0 -q || exit 1
 ~/.local/share/rice-apps/cursor/make-cursor.py --apply >/dev/null &   # Cursor zuerst, parallel zum Rest

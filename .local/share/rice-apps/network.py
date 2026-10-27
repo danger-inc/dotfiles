@@ -8,6 +8,7 @@ import os, re, signal, subprocess, sys, threading, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tui
+import rice_i18n; rice_i18n.install()
 from tui import Gtk, GLib, label, hbox, vbox, esc
 
 TYPE_GLYPHS = {"802-11-wireless": "󰖩", "wifi": "󰖩", "802-3-ethernet": "󰈀", "ethernet": "󰈀", "vpn": "󰦝",

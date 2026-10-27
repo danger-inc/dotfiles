@@ -89,6 +89,7 @@ grep -v '^#' packages-aur.txt | yay -S --needed -      # wlogout, zen-browser
 
 * the keyboard layout is hard-coded to `de` in `hyprland.lua` (`kb_layout`) – change it before the first start.
 * `.config/fish/config.fish` starts Hyprland automatically on tty1 (`exec Hyprland`); delete that block if you use a display manager.
+* language: the helper menus (audio / network / bluetooth, mixer, launcher modes) are written in german and translated at runtime through `rice-i18n-en.json` unless your locale is `de_*`. Force a language with `echo de > ~/.config/rice-lang` (or `en`). Static labels in this repo (rofi, swaync, waybar scripts) are english; `i18n-static.sed` is what `sync.sh` uses to produce them from the author's german live config.
 * autostart launches the -ist apps from `~/.local/bin` if they are installed; missing ones are skipped.
 * `super+l` locks via `~/.config/hypr/lock.sh`; hypridle locks after 10 minutes and turns the screen off after 10.5.
 

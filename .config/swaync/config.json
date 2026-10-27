@@ -6,7 +6,7 @@
   "hide-on-clear": false,
   "hide-on-action": true,
   "relative-timestamps": true,
-  "text-empty": "keine benachrichtigungen",
+  "text-empty": "no notifications",
   "positionX": "right",
   "positionY": "top",
   "control-center-margin-top": 10,
@@ -34,10 +34,10 @@
     "title": {
       "text": "benachrichtigungen",
       "clear-all-button": true,
-      "button-text": "󰎟 alle löschen"
+      "button-text": "󰎟 clear all"
     },
     "dnd": {
-      "text": "󰂛 nicht stören"
+      "text": "󰂛 do not disturb"
     },
     "volume": {
       "label": "󰕾"

@@ -11,28 +11,28 @@ entries=()
 declare -A actions
 
 if [[ $powered == "yes" ]]; then
-    label="󰂲  bluetooth ausschalten"
+    label="󰂲  turn bluetooth off"
     entries+=("$label")
     actions[$label]="bluetoothctl power off"
 
     while read -r _ mac name; do
         [[ -z $mac ]] && continue
         if bluetoothctl info "$mac" | grep -q "Connected: yes"; then
-            label="󰂱  $name  · verbunden – trennen"
+            label="󰂱  $name  · connected – disconnect"
             actions[$label]="bluetoothctl disconnect $mac"
         else
-            label="󰂯  $name  · verbinden"
+            label="󰂯  $name  · connect"
             actions[$label]="bluetoothctl connect $mac"
         fi
         entries+=("$label")
     done < <(bluetoothctl devices Paired)
 else
-    label="󰂯  bluetooth einschalten"
+    label="󰂯  turn bluetooth on"
     entries+=("$label")
     actions[$label]="rfkill unblock bluetooth && sleep 1 && bluetoothctl power on"
 fi
 
-label="󰒓  geräte verwalten …"
+label="󰒓  manage devices …"
 entries+=("$label")
 actions[$label]="$HOME/.local/bin/rice-bluetooth"
 

@@ -18,6 +18,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gtk4LayerShell", "1.0")
 from gi.repository import Gdk, Gio, GLib, Gtk
 from gi.repository import Gtk4LayerShell as Layer
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rice_i18n; rice_i18n.install()
 
 WIDTH = 380          # tatsächliche Kartenbreite inkl. Rahmen
 BAR_MARGIN = 50      # margin-left/-right der Waybar (config.jsonc)

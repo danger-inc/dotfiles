@@ -12,6 +12,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gtk4LayerShell", "1.0")
 from gi.repository import Gdk, Gio, GLib, Gtk
 from gi.repository import Gtk4LayerShell as Layer
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rice_i18n; rice_i18n.install()
 
 MATUGEN_CSS = os.path.expanduser("~/.cache/ist/colors.css")
 FALLBACK = "@define-color background #1a120d; @define-color foreground #f0dfd7; @define-color color9 #ffb68e;"

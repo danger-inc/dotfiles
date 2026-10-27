@@ -11,7 +11,8 @@ import os, signal, sys, warnings
 # Software-Renderer: sieht gleich aus (Blur macht Hyprland), braucht aber nur halb so viel Speicher
 os.environ.setdefault("GSK_RENDERER", "cairo")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import tui  # noqa: E402  (setzt die GTK-Versionen)
+import tui
+import rice_i18n; rice_i18n.install()  # noqa: E402  (setzt die GTK-Versionen)
 from tui import Gio, GLib, Gtk  # noqa: E402
 
 RUNTIME = GLib.get_user_runtime_dir()

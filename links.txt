@@ -16,6 +16,8 @@
 .local/share/rice-apps/ist-swipe.py
 .local/bin/ist-darkmode
 # eigene Hilfsprogramme (Waybar-Menüs, Lautstärke-Anzeige, Cursor, wofi-Fokus-Fix). Brauchen tui.py/glass.py aus einer der -ist-Apps.
+.local/share/rice-apps/rice_i18n.py
+.local/share/rice-apps/rice-i18n-en.json
 .local/share/rice-apps/ricetui.py
 .local/share/rice-apps/audio.py
 .local/share/rice-apps/bluetooth.py
