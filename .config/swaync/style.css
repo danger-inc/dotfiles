@@ -1,0 +1,258 @@
+/* Benachrichtigungen (swaync): Kontrollzentrum + Popups im Look der eigenen Apps (scourge, notist, datist,
+   musicalist) und der Waybar: dunkle Glasfläche, 1-px-Rahmen in der Akzentfarbe, 4–6 px Rundung, flache Knöpfe,
+   schmale Regler, kleine Überschriften in der Akzentfarbe. Farben aus matugen (Super+W), Blur von Hyprland.
+   swaync lädt vorher /etc/xdg/swaync/style.css, hier wird nur überschrieben. Altes Design: style.css.bak-ist */
+@import url("@HOME@/.cache/ist/colors.css");
+
+:root {
+  --glass: alpha(@background, 0.82);
+  --line: alpha(@primary, 0.55);
+  --line-dim: alpha(@primary, 0.25);
+  --dim: @secondary;
+  --critical: @tertiary;
+  --notification-icon-size: 40px;
+}
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-weight: bold;
+}
+
+/* ---------- Panel ---------- */
+.control-center {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 2px;
+  color: @foreground;
+}
+
+.widget { margin: 4px 10px; padding: 0; }
+
+/* ---------- Schnellschalter: wie die [ knöpfe ] der Apps ---------- */
+.widget-buttons-grid { padding: 2px 0 4px 0; }
+.widget-buttons-grid flowboxchild { padding: 0 2px; }
+.widget-buttons-grid flowboxchild > button {
+  background: transparent;
+  color: @foreground;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  min-height: 38px;
+  font-size: 17px;
+  box-shadow: none;
+  transition: background-color 120ms, color 120ms, border-color 120ms;
+}
+.widget-buttons-grid flowboxchild > button:hover {
+  background: @primary;
+  border-color: @primary;
+  color: @on_primary;
+}
+.widget-buttons-grid flowboxchild > button.toggle:checked {
+  background: alpha(@primary, 0.22);
+  border-color: @primary;
+  color: @foreground;
+}
+.widget-buttons-grid flowboxchild > button.toggle:checked:hover { background: @primary; color: @on_primary; }
+
+/* ---------- Regler: flach, 4-px-Spur, schmaler Riegel (wie in scourge/musicalist) ---------- */
+.widget-volume, .widget-backlight {
+  background: transparent;
+  border: 1px solid var(--line-dim);
+  border-radius: 6px;
+  padding: 2px 10px;
+}
+.widget-volume { margin-bottom: 2px; }
+.widget-backlight { margin-top: 2px; }
+.widget-volume label, .widget-backlight label, .widget-slider label {
+  font-size: 16px;
+  color: @primary;
+  min-width: 24px;
+}
+.widget-volume > box > button {
+  background: transparent;
+  color: var(--dim);
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+}
+.widget-volume > box > button:hover { color: @foreground; background: alpha(@primary, 0.15); }
+
+scale trough {
+  background: alpha(@foreground, 0.14);
+  border-radius: 2px;
+  min-height: 4px;
+}
+scale highlight { background: @primary; border-radius: 2px; }
+scale slider {
+  background: @primary;
+  border: none;
+  border-radius: 2px;
+  min-width: 5px;
+  min-height: 16px;
+  margin: -6px 0;
+  box-shadow: none;
+}
+
+.widget-volume row image { -gtk-icon-size: 18px; }
+
+/* ---------- Medienplayer ---------- */
+.widget-mpris .widget-mpris-player {
+  margin: 0;
+  border-radius: 6px;
+  border: 1px solid var(--line-dim);
+  box-shadow: none;
+}
+.widget-mpris .widget-mpris-player .mpris-overlay { padding: 10px; background-color: alpha(@background, 0.6); }
+.widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-album-art { border-radius: 4px; box-shadow: none; }
+.widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-title { font-size: 13px; color: @foreground; }
+.widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-subtitle { font-size: 12px; color: var(--dim); }
+.widget-mpris .widget-mpris-player .mpris-overlay > box > button { color: @foreground; border-radius: 4px; }
+.widget-mpris .widget-mpris-player .mpris-overlay > box > button:hover { background: @primary; color: @on_primary; }
+.widget-mpris > box > button { color: @primary; }
+
+/* ---------- Kopfzeile: Titel (wie ein Kastentitel) + alle löschen ---------- */
+.widget-title {
+  margin-top: 12px;
+  padding: 0 2px 0 4px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.widget-title > label { font-size: 13px; color: @primary; }
+.widget-title > button {
+  background: transparent;
+  color: @foreground;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 8px;
+  min-height: 0;
+  font-size: 12px;
+  box-shadow: none;
+  transition: background-color 120ms, color 120ms;
+}
+.widget-title > button:hover { background: @primary; border-color: @primary; color: @on_primary; }
+
+/* ---------- Nicht stören: eckiger Schalter wie in den Apps ---------- */
+.widget-dnd { margin-top: 2px; margin-bottom: 4px; padding: 0 2px 0 4px; }
+.widget-dnd label { font-size: 12px; color: var(--dim); }
+.widget-dnd switch {
+  background: alpha(@foreground, 0.1);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px;
+  min-width: 36px;
+  min-height: 0;
+}
+.widget-dnd switch:checked { background: @primary; border-color: @primary; }
+.widget-dnd switch slider {
+  background: @foreground;
+  border-radius: 2px;
+  min-width: 14px;
+  min-height: 14px;
+  box-shadow: none;
+}
+.widget-dnd switch:checked slider { background: @on_primary; }
+
+/* ---------- Liste ---------- */
+.control-center .control-center-list { background: transparent; min-height: 60px; }
+.control-center .control-center-list-placeholder {
+  color: var(--dim);
+  font-size: 12px;
+  opacity: 1;
+  margin: 20px 0;
+}
+.control-center .control-center-list .notification { box-shadow: none; }
+
+/* ---------- Einzelne Benachrichtigung (Panel + Popups) ---------- */
+.control-center .control-center-list row,
+.control-center .control-center-list row:focus,
+.control-center .control-center-list row:hover,
+.control-center .control-center-list row:selected,
+.notification-row, .notification-row:focus, .notification-row:hover {
+  background: transparent;
+  outline: none;
+  margin: 0;
+}
+.notification-row .notification-background { padding: 3px 10px; }
+.notification-row .notification-background .notification {
+  background: alpha(@background, 0.35);
+  border: 1px solid var(--line-dim);
+  border-radius: 6px;
+  box-shadow: none;
+  transition: border-color 120ms;
+}
+.notification-row .notification-background .notification:hover { border-color: var(--line); }
+.notification-row .notification-background .notification.critical { border-color: var(--critical); }
+.notification-row .notification-background .notification .notification-default-action {
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: transparent;
+}
+.notification-row .notification-background .notification .notification-default-action:hover {
+  background: alpha(@primary, 0.08);
+}
+
+.notification-content .image, .notification-content .app-icon { border-radius: 4px; margin-right: 10px; }
+.notification-content .body-image { border-radius: 4px; margin-top: 6px; }
+.notification-content .text-box .summary { color: @foreground; font-size: 13px; }
+.notification-content .text-box .time { color: var(--dim); font-size: 11px; margin-right: 24px; }
+.notification-content .text-box .body { color: alpha(@foreground, 0.8); font-size: 12px; font-weight: normal; }
+
+.notification-content progressbar trough { background: alpha(@foreground, 0.14); border-radius: 2px; min-height: 4px; }
+.notification-content progressbar progress { background: @primary; border-radius: 2px; }
+
+.notification-row .notification-background .notification .notification-action > button {
+  background: transparent;
+  color: @foreground;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin: 0 4px 8px 4px;
+  padding: 1px 8px;
+  min-height: 0;
+  box-shadow: none;
+}
+.notification-row .notification-background .notification .notification-action > button:hover {
+  background: @primary;
+  border-color: @primary;
+  color: @on_primary;
+}
+
+/* ✕ wie in den Apps: Hover in der dritten Farbe */
+.close-button {
+  background: transparent;
+  color: alpha(@foreground, 0.6);
+  border-radius: 4px;
+  margin: 6px;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0;
+  box-shadow: none;
+}
+.close-button:hover { background: @tertiary; color: @background; }
+
+/* ---------- Gruppen (mehrere Meldungen derselben App) ---------- */
+.notification-group { margin: 0; }
+.notification-group .notification-group-headers { color: @primary; margin: 6px 14px 2px 14px; font-size: 12px; }
+.notification-group .notification-group-buttons button {
+  background: transparent;
+  color: var(--dim);
+  border-radius: 4px;
+  box-shadow: none;
+}
+.notification-group .notification-group-buttons button:hover { background: alpha(@primary, 0.15); color: @foreground; }
+.notification-group.collapsed .notification-row:not(:last-child) .notification {
+  background: alpha(@background, 0.2);
+  border-color: alpha(@primary, 0.12);
+}
+
+/* ---------- Popups oben rechts: rechte Kante bündig mit der Waybar ---------- */
+notificationwindow { backdrop-filter: blur(10px); }
+.floating-notifications { margin: 0 50px 0 0; }
+.floating-notifications .notification-row .notification-background { padding: 5px 0; }
+.floating-notifications .notification-row .notification-background .notification {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.floating-notifications .notification-row .notification-background .notification.critical { border-color: var(--critical); }

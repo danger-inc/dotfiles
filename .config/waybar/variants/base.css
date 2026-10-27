@@ -1,0 +1,12 @@
+* { font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free"; font-weight: bold; font-size: 14px;
+    border: none; margin: 0; padding: 0; min-height: 0; }
+window#waybar { background: transparent; }
+tooltip { background-color: alpha(@background, 0.94); border: 1px solid @primary; border-radius: 6px; }
+tooltip label { color: @foreground; }
+#network, #bluetooth { font-family: "JetBrainsMono Nerd Font Propo"; }
+#bluetooth { padding-left: 10px; }
+#tray.empty { background: transparent; border: none; padding: 0; margin: 0; }
+#custom-separator { color: alpha(@primary, 0.6); font-size: 20px; padding: 0 2px; background: transparent; }
+#custom-separator:hover { color: @primary; }
+/* ⏻ ist in der Mono-Schrift breiter als sein Platz (ragte 4 px nach rechts) – Propo gibt ihm volle Breite */
+#custom-power { font-family: "JetBrainsMono Nerd Font Propo"; padding-left: 11px; padding-right: 11px; }

@@ -1,0 +1,18 @@
+/* V2 „Drei Gruppen“ – links/Mitte/rechts je ein Kasten, Module durch feine Linien getrennt */
+@import url("file://@HOME@/.config/waybar/variants/base.css");
+.modules-left, .modules-center, .modules-right {
+    background-color: alpha(@background, 0.84); border: 1px solid alpha(@primary, 0.55); border-radius: 6px;
+    padding: 0 4px; margin: 6px 0; }
+.modules-left > widget:not(:first-child) > *, .modules-right > widget:not(:first-child) > * {
+    border-left: 1px solid alpha(@primary, 0.22); }
+#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #custom-power {
+    color: @foreground; padding: 0 12px; margin: 5px 0; transition: background-color 120ms, color 120ms; }
+#clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover,
+#custom-notification:hover, #connectivity:hover { background-color: alpha(@primary, 0.2); border-radius: 4px; }
+#network, #bluetooth { color: @primary; }
+#custom-separator { font-size: 0; padding: 0; margin: 0; color: transparent; }
+#custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4 { color: alpha(@foreground, 0.8); border-radius: 4px; padding: 0 11px; margin: 5px 1px; }
+#custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover { background-color: alpha(@primary, 0.18); }
+#custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active { background-color: @primary; color: @on_primary; }
+#custom-power { color: @primary; }
+#custom-power:hover { background-color: @tertiary; color: @background; border-radius: 4px; }

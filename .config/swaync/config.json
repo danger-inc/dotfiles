@@ -1,0 +1,91 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "cssPriority": "user",
+  "layer": "overlay",
+  "transition-time": 200,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "relative-timestamps": true,
+  "text-empty": "keine benachrichtigungen",
+  "positionX": "right",
+  "positionY": "top",
+  "control-center-margin-top": 10,
+  "control-center-margin-bottom": 10,
+  "control-center-margin-right": 50,
+  "control-center-width": 400,
+  "control-center-height": -1,
+  "fit-to-screen": false,
+  "notification-window-width": 420,
+  "notification-icon-size": 44,
+  "notification-body-image-height": 120,
+  "notification-body-image-width": 240,
+  "timeout": 6,
+  "timeout-low": 4,
+  "timeout-critical": 0,
+  "widgets": [
+    "buttons-grid",
+    "volume",
+    "backlight",
+    "title",
+    "dnd",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "benachrichtigungen",
+      "clear-all-button": true,
+      "button-text": "󰎟 alle löschen"
+    },
+    "dnd": {
+      "text": "󰂛 nicht stören"
+    },
+    "volume": {
+      "label": "󰕾"
+    },
+    "backlight": {
+      "label": "󰃟",
+      "device": "amdgpu_bl1",
+      "min": 5
+    },
+    "mpris": {
+      "image-size": 56,
+      "autohide": true,
+      "ignore-player": [
+        "helium-browser",
+        "Helium",
+        "chromium"
+      ]
+    },
+    "buttons-grid": {
+      "buttons-per-row": 5,
+      "actions": [
+        {
+          "label": "󰖩",
+          "type": "toggle",
+          "command": "@HOME@/.config/swaync/scripts/toggle.sh wifi",
+          "update-command": "@HOME@/.config/swaync/scripts/toggle.sh wifi state"
+        },
+        {
+          "label": "󰂯",
+          "type": "toggle",
+          "command": "@HOME@/.config/swaync/scripts/toggle.sh bluetooth",
+          "update-command": "@HOME@/.config/swaync/scripts/toggle.sh bluetooth state"
+        },
+        {
+          "label": "󰝟",
+          "type": "toggle",
+          "command": "@HOME@/.config/swaync/scripts/toggle.sh mute",
+          "update-command": "@HOME@/.config/swaync/scripts/toggle.sh mute state"
+        },
+        {
+          "label": "󰌾",
+          "command": "@HOME@/.config/swaync/scripts/toggle.sh lock"
+        },
+        {
+          "label": "󰐥",
+          "command": "@HOME@/.config/swaync/scripts/toggle.sh power"
+        }
+      ]
+    }
+  }
+}

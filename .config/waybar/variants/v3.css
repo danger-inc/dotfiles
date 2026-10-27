@@ -1,0 +1,17 @@
+/* V3 „App-Kopfzeile“ – eine durchgehende Leiste wie der Kopf von scourge/notist: Uhr als Marken-Chip,
+   Arbeitsflächen als Reiter, sonst schlichter Text */
+@import url("file://@HOME@/.config/waybar/variants/base.css");
+window#waybar > box { background-color: alpha(@background, 0.84); border: 1px solid alpha(@primary, 0.55); border-radius: 6px;
+    padding: 0 8px; }
+#clock { background-color: @primary; color: @on_primary; border-radius: 4px; padding: 0 10px; margin: 8px 4px 8px 2px; }
+#pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #custom-power {
+    color: @foreground; padding: 0 10px; margin: 6px 0; border-radius: 4px; transition: background-color 120ms; }
+#pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover, #custom-notification:hover,
+#connectivity:hover { background-color: alpha(@primary, 0.18); }
+#clock:hover { background-color: alpha(@primary, 0.85); }
+#network, #bluetooth { color: @primary; }
+#custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4 { color: alpha(@foreground, 0.8); border-radius: 4px; padding: 0 11px; margin: 7px 1px; }
+#custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover { background-color: alpha(@primary, 0.12); }
+#custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active { background-color: alpha(@primary, 0.25); color: @foreground; }
+#custom-power { color: @primary; }
+#custom-power:hover { background-color: @tertiary; color: @background; }

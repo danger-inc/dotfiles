@@ -1,0 +1,3 @@
+# AUR:  grep -v '^#' packages-aur.txt | yay -S --needed -
+wlogout
+zen-browser-bin

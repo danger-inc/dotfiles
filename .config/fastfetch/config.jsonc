@@ -1,0 +1,48 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  // Aufruf über "161" (~/.config/fastfetch/161.sh): wählt das Layout nach Fensterbreite.
+  // Farben: blue = primary, cyan = secondary, magenta = tertiary (matugen über kitty).
+  // Logo: make-logo.py, Farben aus der Kitty-Palette 17-26 (kitty-colors.sh), färben sich bei Super+W mit.
+  // Linker Abstand (Zentrierung) kommt von 161.sh.
+  // Stil: angelehnt an Evangelion-Titelkarten/NERV-Anzeigen (Großbuchstaben, nummerierte Abschnitte).
+  "logo": {
+    // Fertige ANSI-Datei aus make-logo.py (Pixel-Art, Farben aus der Kitty-Palette 17-26)
+    "type": "file-raw",
+    "source": "~/.config/fastfetch/161.txt",
+    "padding": {
+      "top": 1,
+      "right": 4
+    }
+  },
+  "display": {
+    "separator": "",
+    // Zu lange Zeilen abschneiden statt umbrechen
+    "disableLinewrap": true,
+    "key": {
+      "width": 14
+    }
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "format": "{#magenta}SYSTEM {#38;5;23}━━━━━━━━━━━━━━━━━━━━━━━━ {#magenta}01"
+    },
+    { "type": "os",       "key": " 󰣇  OS",       "format": "{2}",            "keyColor": "blue" },
+    { "type": "kernel",   "key": " 󰌽  KERNEL",   "format": "{2}",            "keyColor": "blue" },
+    { "type": "packages", "key": " 󰏗  PAKETE",   "format": "{all}",          "keyColor": "blue" },
+    { "type": "wm",       "key": " 󱗃  WM",       "format": "{2}",            "keyColor": "cyan" },
+    { "type": "terminal", "key": " 󰆍  TERMINAL", "format": "{5}",            "keyColor": "cyan" },
+    { "type": "display",  "key": " 󰍹  DISPLAY",  "format": "{1}x{2} @ {3}Hz", "keyColor": "cyan" },
+    { "type": "break" },
+    {
+      "type": "custom",
+      "format": "{#magenta}HARDWARE {#38;5;23}━━━━━━━━━━━━━━━━━━━━━━ {#magenta}02"
+    },
+    { "type": "cpu",      "key": " 󰻠  CPU",      "format": "{1}",            "keyColor": "blue" },
+    { "type": "gpu",      "key": " 󰊴  GPU",      "format": "{1} Radeon Vega", "keyColor": "blue" },
+    { "type": "memory",   "key": " 󰍛  RAM",      "format": "{1} / {2}",      "keyColor": "cyan" },
+    { "type": "uptime",   "key": " 󱫐  UPTIME",                              "keyColor": "cyan" },
+    { "type": "break" },
+    { "type": "colors", "paddingLeft": 1, "symbol": "square" }
+  ]
+}

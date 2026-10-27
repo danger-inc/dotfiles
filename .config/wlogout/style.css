@@ -1,0 +1,61 @@
+/* Power-Menü im Waybar-Stil: kompakte Karten, Farben und Icons kommen von matugen.
+ * Icons: PNGs in ~/.cache/matugen/wlogout, erzeugt von make-icons.py
+ * Gestartet über ~/.config/wlogout/launch.sh, das die Karten mittig platziert. */
+@import url("file://@HOME@/.cache/ist/colors.css");
+
+* {
+    background-image: none;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    font-weight: 800;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* abgedunkelt; der Blur kommt von der Layer-Regel in hyprland.lua */
+window {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+button {
+    background-color: @background;
+    color: @foreground;
+    border: 2px solid @color9;
+    border-radius: 15px;
+    margin: 8px;
+    min-width: 98px;    /* alle Karten gleich groß; passt zu card_w/card_h in launch.sh */
+    min-height: 100px;  /* + 96px padding = 196px */
+    padding: 96px 0 0 0;  /* schiebt die Beschriftung unter das Icon */
+    background-repeat: no-repeat;
+    background-position: center 40%;
+    background-size: 42px;
+    outline-style: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* kein automatisch markierter erster Button beim Öffnen */
+button:focus {
+    background-color: @background;
+    color: @foreground;
+    border: 2px solid @color9;
+}
+
+/* gleiche Hover-Farbe wie die Waybar-Module */
+button:hover {
+    background-color: @color9;
+    color: @background;
+    border: 2px solid @color9;
+    background-size: 48px;
+}
+
+/* Icons */
+#lock { background-image: image(url("file://@HOME@/.cache/ist/wlogout/lock.png")); }
+#lock:hover { background-image: image(url("file://@HOME@/.cache/ist/wlogout/lock-hover.png")); }
+#logout { background-image: image(url("file://@HOME@/.cache/ist/wlogout/logout.png")); }
+#logout:hover { background-image: image(url("file://@HOME@/.cache/ist/wlogout/logout-hover.png")); }
+#suspend { background-image: image(url("file://@HOME@/.cache/ist/wlogout/suspend.png")); }
+#suspend:hover { background-image: image(url("file://@HOME@/.cache/ist/wlogout/suspend-hover.png")); }
+#reboot { background-image: image(url("file://@HOME@/.cache/ist/wlogout/reboot.png")); }
+#reboot:hover { background-image: image(url("file://@HOME@/.cache/ist/wlogout/reboot-hover.png")); }
+#shutdown { background-image: image(url("file://@HOME@/.cache/ist/wlogout/shutdown.png")); }
+#shutdown:hover { background-image: image(url("file://@HOME@/.cache/ist/wlogout/shutdown-hover.png")); }

@@ -1,0 +1,54 @@
+# offizielle Arch-Repos:  grep -v '^#' packages.txt | sudo pacman -S --needed -
+# Desktop
+hyprland
+hyprlock
+hypridle
+hyprshot
+hyprsunset
+hyprpicker
+hyprshutdown
+hyprpolkitagent
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+awww
+waybar
+swaync
+wofi
+rofi
+matugen
+# Terminal
+kitty
+fish
+starship
+btop
+fastfetch
+# Werkzeuge, die Skripte und Tastenkürzel aufrufen
+grim
+slurp
+wf-recorder
+wl-clipboard
+cliphist
+playerctl
+brightnessctl
+jq
+libnotify
+power-profiles-daemon
+networkmanager
+bluez
+bluez-utils
+pipewire
+pipewire-pulse
+wireplumber
+# Schrift und Grundlagen der -ist-Apps
+ttf-jetbrains-mono-nerd
+noto-fonts-emoji
+gtk4
+gtk4-layer-shell
+python-gobject
+python-cairo
+librsvg
+gcc
+git
+cpio
+diffutils
+rsync

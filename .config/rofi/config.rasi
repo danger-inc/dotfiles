@@ -1,0 +1,201 @@
+/* rofi = Starter (Super+R) im -ist-Look wie scourge, notist, datist, musicalist:
+   Kopfzeile mit „starter“-Chip und nummerierten Reitern, Suchfeld und Liste mit 1-px-Rahmen, Statuszeile mit
+   Tastenhinweisen. Farben vom Wallpaper (matugen), Blur von Hyprland (layer_rule "blur-rofi").
+   Eigene Modi: ~/.config/rofi/modes/ist.py. Altes Design: config.rasi.bak-ist */
+configuration {
+    modi:                       "drun,fenster:~/.config/rofi/modes/ist.sh fenster,filebrowser,rechner:~/.config/rofi/modes/ist.sh rechner,ablage:~/.config/rofi/modes/ist.sh ablage,zeichen:~/.config/rofi/modes/ist.sh zeichen,web:~/.config/rofi/modes/ist.sh web,system:~/.config/rofi/modes/ist.sh system";
+    show-icons:                 true;
+    icon-theme:                 "Papirus";
+    font:                       "JetBrainsMono Nerd Font Bold 11";
+    drun-display-format:        "{name} <span alpha='50%'>{generic}</span>";
+    drun-match-fields:          "name,generic,exec,keywords,categories";
+    matching:                   "fuzzy";
+    sort:                       true;
+    sorting-method:             "fzf";
+    drun-use-desktop-cache:     true;      /* .desktop-Dateien nicht bei jedem Start neu einlesen */
+    drun-reload-desktop-cache:  false;
+    display-drun:               "¹apps";
+    display-fenster:            "²fenster";
+    display-filebrowser:        "³dateien";
+    display-rechner:            "⁴rechner";
+    display-ablage:             "⁵ablage";
+    display-zeichen:            "⁶zeichen";
+    display-web:                "⁷web";
+    display-system:             "⁸system";
+    /* Tab = nächster Modus (wie die Reiter in den Apps), Umschalt+Tab = zurück */
+    kb-row-tab:                 "";
+    kb-mode-next:               "Tab,Control+Tab,Alt+Right";
+    kb-mode-previous:           "ISO_Left_Tab,Control+ISO_Left_Tab,Alt+Left";
+    kb-mode-complete:           "";
+    kb-element-next:            "";
+    kb-element-prev:            "";
+    kb-remove-char-back:        "BackSpace,Shift+BackSpace";
+    filebrowser {
+        directory:              "~";
+        sorting-method:         "name";
+        directories-first:      true;
+    }
+}
+
+@import "@HOME@/.cache/ist/colors-rofi.rasi"
+
+* {
+    background-color:           transparent;
+    text-color:                 @fg;
+}
+
+window {
+    width:                      820px;
+    /* oben fest verankert + feste Höhe: Reiter bleiben beim Wechseln an derselben Stelle (mittig verankert
+       sprang das Fenster mit jeder Listenlänge – ein Klick auf den nächsten Reiter landete daneben und schloss rofi) */
+    location:                   north;
+    anchor:                     north;
+    y-offset:                   170px;
+    background-color:           @bg-panel;
+    border:                     1px;
+    border-color:               @line;
+    border-radius:              6px;
+    padding:                    0;
+}
+
+mainbox {
+    children:                   [ "header", "inputbar", "message", "listview", "footer" ];
+    spacing:                    0;
+}
+
+/* --- Kopfzeile: Marken-Chip + Reiter --- */
+header {
+    orientation:                horizontal;
+    children:                   [ "textbox-brand", "mode-switcher" ];
+    padding:                    10px 14px 6px 14px;
+    spacing:                    10px;
+    expand:                     false;
+}
+textbox-brand {
+    content:                    "starter";
+    expand:                     false;
+    background-color:           @fg-accent;
+    text-color:                 @fg-selected;
+    padding:                    2px 9px;
+    border-radius:              4px;
+    vertical-align:             0.5;
+}
+mode-switcher {
+    spacing:                    2px;
+    expand:                     true;
+}
+button {
+    padding:                    2px 5px;
+    border-radius:              4px;
+    text-color:                 @fg-dim;
+    cursor:                     pointer;
+    vertical-align:             0.5;
+}
+button selected {
+    background-color:           @bg-tab;
+    text-color:                 @fg;
+}
+
+/* --- Suchfeld: wie die Eingabefelder der Apps, Zähler rechts (gefiltert/alle) --- */
+inputbar {
+    margin:                     4px 14px 8px 14px;
+    padding:                    6px 10px;
+    border:                     1px;
+    border-color:               @line;
+    border-radius:              4px;
+    background-color:           @bg-input;
+    children:                   [ "textbox-prompt", "entry", "num-filtered-rows", "textbox-sep", "num-rows" ];
+    spacing:                    8px;
+    text-color:                 @fg;
+}
+textbox-prompt {
+    content:                    "›";
+    expand:                     false;
+    text-color:                 @fg-accent;
+}
+entry {
+    text-color:                 @fg;        /* sonst rofi-Standard (dunkles Türkis) – kaum lesbar */
+    placeholder:                "suchen …";
+    placeholder-color:          @fg-dim;
+    cursor-color:               @fg-accent;
+}
+num-filtered-rows, num-rows, textbox-sep {
+    text-color:                 @fg-dim;
+    expand:                     false;
+}
+textbox-sep {
+    content:                    "/";
+}
+
+/* --- Hinweis-/Ergebniszeile (Rechner, Websuche, Rückfragen) --- */
+message {
+    margin:                     0 14px 8px 14px;
+    padding:                    6px 10px;
+    border:                     1px dash;
+    border-color:               @line;
+    border-radius:              4px;
+}
+textbox {
+    text-color:                 @fg;
+    markup:                     true;
+}
+
+/* --- Liste --- */
+listview {
+    margin:                     0 8px;
+    lines:                      9;
+    columns:                    1;
+    spacing:                    1px;
+    cycle:                      true;
+    dynamic:                    false;
+    fixed-height:               true;
+    fixed-num-lines:            true;
+    scrollbar:                  true;
+}
+scrollbar {
+    handle-width:               3px;
+    handle-color:               @line;
+    margin:                     0 0 0 4px;
+}
+element {
+    padding:                    5px 10px;
+    border-radius:              4px;
+    spacing:                    10px;
+    cursor:                     pointer;
+}
+element normal.normal, element alternate.normal, element normal.active, element alternate.active {
+    background-color:           transparent;
+    text-color:                 @fg;
+}
+element selected.normal, element selected.active {
+    background-color:           @bg-tab;
+    text-color:                 @fg;
+}
+element normal.urgent, element alternate.urgent, element selected.urgent {
+    text-color:                 @fg-accent;
+}
+element-text {
+    text-color:                 inherit;
+    vertical-align:             0.5;
+    cursor:                     inherit;
+}
+element-icon {
+    size:                       22px;
+    vertical-align:             0.5;
+    cursor:                     inherit;
+}
+
+/* --- Statuszeile mit Tastenhinweisen (wie unten in den Apps) --- */
+footer {
+    orientation:                horizontal;
+    children:                   [ "textbox-hints" ];
+    padding:                    8px 14px 10px 14px;
+    expand:                     false;
+}
+textbox-hints {
+    content:                    "enter <span alpha='55%'>öffnen</span>   tab <span alpha='55%'>nächster modus</span>   strg+⏎ <span alpha='55%'>eingabe übernehmen</span>   esc <span alpha='55%'>schließen</span>";
+    markup:                     true;
+    horizontal-align:           1;
+    text-color:                 @fg-accent;
+    font:                       "JetBrainsMono Nerd Font Bold 9";
+}

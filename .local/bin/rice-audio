@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Waybar-Rechtsklick: TUI-App "audio" ein-/ausblenden (~/.local/share/rice-apps/ricetui.py).
+# Der Prozess läuft dauerhaft im Hintergrund (Start aus hyprland.lua), ein Klick schreibt nur
+# den Namen in seine Leitung – darum erscheint das Fenster sofort. Optional: rice-audio <tab|hide>.
+# Kein pkill hier (kostet bis zu 100 ms) – offene Menüs schließt der Hintergrund-Prozess selbst.
+fifo=$XDG_RUNTIME_DIR/rice-tui.fifo
+read -r pid < "$XDG_RUNTIME_DIR/rice-tui.pid" 2>/dev/null
+if [[ -n $pid && -p $fifo ]] && kill -0 "$pid" 2>/dev/null; then
+    echo "audio${1:+:$1}" > "$fifo"
+else
+    setsid -f python3 "$HOME/.local/share/rice-apps/ricetui.py" --show="audio${1:+:$1}" >/dev/null 2>&1
+fi

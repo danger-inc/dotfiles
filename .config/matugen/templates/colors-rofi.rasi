@@ -1,0 +1,20 @@
+/* Automatisch erzeugt von matugen aus {{image}} */
+/* Vorlage: ~/.config/matugen/templates/colors-rofi.rasi */
+* {
+    /* 99 = 60 % Deckkraft wie Kitty, 4d = 30 % für das Suchfeld */
+    bg:           #{{colors.surface.default.hex_stripped}}99;
+    bg-input:     #{{colors.surface.default.hex_stripped}}4d;
+    border-dim:   #{{colors.primary.default.hex_stripped}}73;
+    bg-alt:       {{colors.surface_container_high.default.hex}};
+    bg-selected:  {{colors.primary.default.hex}};
+    fg:           {{colors.on_surface.default.hex}};
+    fg-dim:       {{colors.outline.default.hex}};
+    fg-selected:  {{colors.on_primary.default.hex}};
+    border-color: {{colors.primary.default.hex}};
+    /* -ist-Look (Starter): Fläche 85 %, Reiter 22 %, Zeile 12 %, Linie 55 % */
+    bg-panel:     #{{colors.surface.default.hex_stripped}}d9;
+    bg-tab:       #{{colors.primary.default.hex_stripped}}38;
+    bg-hover:     #{{colors.primary.default.hex_stripped}}1f;
+    line:         #{{colors.primary.default.hex_stripped}}8c;
+    fg-accent:    {{colors.primary.default.hex}};
+}

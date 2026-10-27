@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Kleines WLAN-Menü für Waybar (Linksklick auf das Netzwerk-Modul).
+# Ersetzt das Kontextmenü von nm-applet.
+
+source "$HOME/.config/waybar/scripts/menu-lib.sh"
+menu_toggle_guard wifi
+menu_x=$(menu_xoffset 360)
+
+menu() {
+    wofi --dmenu \
+        --style "$HOME/.config/wofi/style.css" \
+        --width 360 \
+        --location top_left --xoffset "$menu_x" --yoffset 10 \
+        "$@"
+}
+
+# Verbindet im Hintergrund und meldet das Ergebnis als Benachrichtigung.
+# Aufruf: run "Erfolgsmeldung" befehl arg...
+run() {
+    setsid -f bash -c '
+        if out=$("${@:2}" 2>&1); then
+            notify-send -a WLAN "WLAN" "$1"
+        else
+            notify-send -a WLAN -u critical "WLAN-Fehler" "$out"
+        fi' _ "$@" >/dev/null 2>&1
+}
+
+entries=()
+declare -A actions ssids secured
+
+if [[ $(nmcli radio wifi) == "enabled" ]]; then
+    label="󰤭  wlan ausschalten"
+    entries+=("$label")
+    actions[$label]="toggle-off"
+
+    # Verbundenes Netz vorab bestimmen (mehrere Access Points können dieselbe SSID haben)
+    current=$(nmcli -t --escape no -f IN-USE,SSID dev wifi list --rescan no | sed -n 's/^\*://p' | head -n1)
+
+    declare -A seen
+    while IFS=: read -r _ signal security ssid; do
+        [[ -z $ssid || -n ${seen[$ssid]} ]] && continue
+        seen[$ssid]=1
+
+        if   (( signal >= 80 )); then icon="󰤨"
+        elif (( signal >= 60 )); then icon="󰤥"
+        elif (( signal >= 40 )); then icon="󰤢"
+        elif (( signal >= 20 )); then icon="󰤟"
+        else                          icon="󰤯"
+        fi
+        lock=""
+        [[ -n $security && $security != "--" ]] && lock=" 󰌾"
+
+        if [[ $ssid == "$current" ]]; then
+            label="$icon  $ssid$lock  · verbunden – trennen"
+            actions[$label]="disconnect"
+        else
+            label="$icon  $ssid$lock"
+            actions[$label]="connect"
+            [[ -n $lock ]] && secured[$label]=1
+        fi
+        ssids[$label]=$ssid
+        entries+=("$label")
+    done < <(nmcli -t --escape no -f IN-USE,SIGNAL,SECURITY,SSID dev wifi list --rescan no)
+
+    # Liste sofort aus dem Cache zeigen, im Hintergrund für das nächste Öffnen neu scannen
+    setsid -f nmcli device wifi rescan >/dev/null 2>&1
+else
+    label="󰤨  wlan einschalten"
+    entries+=("$label")
+    actions[$label]="toggle-on"
+fi
+
+label="󰒓  netzwerkeinstellungen …"
+entries+=("$label")
+actions[$label]="settings"
+
+lines=$(( ${#entries[@]} + 1 ))
+(( lines > 12 )) && lines=12
+choice=$(printf '%s\n' "${entries[@]}" | menu --prompt "wlan" --lines "$lines")
+
+[[ -n $choice && -n ${actions[$choice]} ]] || exit 0
+ssid=${ssids[$choice]}
+
+case ${actions[$choice]} in
+    toggle-off) nmcli radio wifi off ;;
+    toggle-on)  nmcli radio wifi on ;;
+    settings)   setsid -f ~/.local/bin/rice-netz >/dev/null 2>&1 ;;
+    disconnect)
+        dev=$(nmcli -t -f DEVICE,TYPE device | awk -F: '$2=="wifi"{print $1; exit}')
+        run "Getrennt von $ssid" nmcli device disconnect "$dev"
+        ;;
+    connect)
+        if nmcli -t -f NAME connection show | grep -Fxq -- "$ssid"; then
+            # Gespeichertes Netz: Passwort ist schon hinterlegt
+            run "Verbunden mit $ssid" nmcli connection up id "$ssid"
+        elif [[ -n ${secured[$choice]} ]]; then
+            pw=$(menu --password --prompt "passwort für $ssid" --lines 1 </dev/null)
+            [[ -n $pw ]] || exit 0
+            run "Verbunden mit $ssid" nmcli device wifi connect "$ssid" password "$pw"
+        else
+            run "Verbunden mit $ssid" nmcli device wifi connect "$ssid"
+        fi
+        ;;
+esac

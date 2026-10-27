@@ -1,0 +1,235 @@
+// Neuer Look (gleiche Inhalte wie klassisch, etwas höher). Umschalten: scripts/style-switch.sh
+{
+    "reload_config_on_change": false,
+    "reload_style_on_change": true,
+    "layer": "overlay",
+    "position": "top",
+    "height": 42,
+    "margin-top": -42,
+    "margin-left": 50,
+    "margin-right": 50,
+    "spacing": 10,
+    "mod": "dock",
+    "exclusive": false,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "modules-left": [
+        "clock",
+        "pulseaudio",
+        "backlight"
+    ],
+    "modules-center": [
+        "group/ws"
+    ],
+    "modules-right": [
+        "tray",
+        "group/connectivity",
+        "cpu",
+        "memory",
+        "custom/separator",
+        "battery",
+        "custom/notification",
+        "custom/power"
+    ],
+    "clock": {
+        // Klick: Datum statt Uhrzeit; Rechtsklick: datist; kein Hover-Kalender
+        "format": "\uf017 {:%H:%M:%S %p}",
+        "format-alt": "\udb80\udced {:%a, %d.%m.%Y}",
+        "tooltip": false,
+        "interval": 1,
+        // Rechtsklick: Kalender (datist) ein/aus
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click-right": "~/.local/bin/datist"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "\udb81\udf5f",
+        "format-icons": {
+            "default": [
+                "\uf026",
+                "\uf027",
+                "\uf028"
+            ]
+        },
+        // Linksklick: eigener Mixer (Gesamt + pro App), Rechtsklick: eigene Audio-App (rice-audio),
+        // Mittelklick: stumm, Mausrad: lauter/leiser
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/volume-mixer.sh",
+        "on-click-right": "~/.local/bin/rice-audio",
+        "on-click-middle": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "scroll-step": 5
+    },
+    "backlight": {
+        // Helligkeit wie die Lautstärke: Mausrad = heller/dunkler (gleiche Schritte wie die Helligkeitstasten)
+        "device": "amdgpu_bl1",
+        "format": "{icon} {percent}%",
+        "format-icons": ["\udb80\udcde", "\udb80\udcdf", "\udb80\udce0"],
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/volume-mixer.sh bright",   // Helligkeits-Karte (wie der Lautstärke-Mixer)
+        "on-scroll-up": "brightnessctl -e4 -n2 set 5%+",
+        "on-scroll-down": "brightnessctl -e4 -n2 set 5%-",
+        "tooltip-format": "Helligkeit {percent}%",
+        "smooth-scrolling-threshold": 1
+    },
+    "group/ws": {
+        // Gruppe, damit die globale "spacing" nicht zwischen die Zahlen kommt
+        "orientation": "horizontal",
+        "modules": ["custom/ws1", "custom/ws2", "custom/ws3", "custom/ws4"]
+    },
+    "custom/ws1": {
+        // eigener Button statt hyprland/workspaces (dessen Klick ist mit Lua-Hyprland kaputt)
+        "exec": "~/.config/waybar/scripts/workspace.py 1",
+        "return-type": "json",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/workspace.py 1 --go",
+        "tooltip": false
+    },
+    "custom/ws2": {
+        // eigener Button statt hyprland/workspaces (dessen Klick ist mit Lua-Hyprland kaputt)
+        "exec": "~/.config/waybar/scripts/workspace.py 2",
+        "return-type": "json",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/workspace.py 2 --go",
+        "tooltip": false
+    },
+    "custom/ws3": {
+        // eigener Button statt hyprland/workspaces (dessen Klick ist mit Lua-Hyprland kaputt)
+        "exec": "~/.config/waybar/scripts/workspace.py 3",
+        "return-type": "json",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/workspace.py 3 --go",
+        "tooltip": false
+    },
+    "custom/ws4": {
+        // eigener Button statt hyprland/workspaces (dessen Klick ist mit Lua-Hyprland kaputt)
+        "exec": "~/.config/waybar/scripts/workspace.py 4",
+        "return-type": "json",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/workspace.py 4 --go",
+        "tooltip": false
+    },
+    "bluetooth": {
+        "format": "󰂯",
+        "format-connected": "󰂱",
+        "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "tooltip-format": "{controller_alias}: {status}",
+        "tooltip-format-connected": "{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/bluetooth-menu.sh",
+        "on-click-right": "~/.local/bin/rice-bluetooth"
+    },
+    "group/connectivity": {
+        "orientation": "horizontal",
+        "modules": [
+            "network",
+            "bluetooth"
+        ]
+    },
+    "network": {
+        "format-wifi": "󰖩",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "format-disabled": "󰖪",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "{ifname}",
+        "tooltip-format-disconnected": "Nicht verbunden",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/wifi-menu.sh",
+        "on-click-right": "~/.local/bin/rice-netz"
+    },
+    "tray": {
+        "icon-size": 16,
+        "spacing": 10
+    },
+    "cpu": {
+        "interval": 1,
+        "format": "\uf2db {usage}%",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/btop-toggle.sh"
+    },
+    "memory": {
+        "interval": 1,
+        "format": "\uefc5  {used:0.1f}G/{total:0.1f}G",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/waybar/scripts/btop-toggle.sh"
+    },
+    "custom/separator": {
+        // Klick: Look der Leiste umschalten (musicalist-Look ↔ klassisch)
+        "format": "|",
+        "tooltip-format": "Klick: Look wechseln (kopfzeile → reiter → klassisch)",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "setsid -f ~/.config/waybar/scripts/style-switch.sh"
+    },
+    "battery": {
+        "interval": 10,
+        "format": "{icon} {capacity}%",
+        "format-charging": "\udb80\udc84 {capacity}%",
+        "format-plugged": "\uf1e6 {capacity}%",
+        "format-icons": [
+            "\udb80\udc8e",
+            "\udb80\udc7a",
+            "\udb80\udc7b",
+            "\udb80\udc7c",
+            "\udb80\udc7d",
+            "\udb80\udc7e",
+            "\udb80\udc7f",
+            "\udb80\udc80",
+            "\udb80\udc81",
+            "\udb80\udc82",
+            "\udb80\udc79"
+        ],
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        // Klick: Restlaufzeit, Rechtsklick: Energieprofil wechseln
+        "format-alt": "{icon} {time}",
+        "format-time": "{H}:{m} h",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click-right": "~/.config/waybar/scripts/power-profile.sh",
+        "tooltip": true
+    },
+    "custom/notification": {
+        // Skript färbt den Punkt mit der matugen-Farbe (Pango kann kein CSS)
+        "tooltip": false,
+        "format": "{}",
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "~/.config/waybar/scripts/notification.py",
+        "restart-interval": 1,
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": false
+    },
+    "custom/power": {
+        "format": "\u23fb",
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "~/.config/wlogout/launch.sh",
+        "tooltip": false
+    },
+    "mpris": {
+        "format": "{player_icon} {artist} - {title}",
+        "format-paused": "{status_icon} <i>{artist} - {title}</i>",
+        "max-length": 40,
+        "player-icons": {
+            "default": "\ud83c\udfb5",
+            "musicalist": "\udb80\udf5a",
+            "spotify": "\uf1bc",
+            "zen": "\udb80\ude39",
+            "firefox": "\uf269",
+            "chromium": "\uf268",
+            "vlc": "\udb81\udd7c"
+        },
+        "status-icons": {
+            "paused": "\u23f8"
+        },
+        // Klick: Pause/Weiter, Rechtsklick: nächster Titel, Mittelklick: vorheriger
+        "cursor": false,   // eigener GTK3-Hand-Cursor würde nach Farbwechsel veralten/abstürzen; Hyprland zeichnet
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl previous"
+    }
+}

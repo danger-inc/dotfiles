@@ -1,0 +1,51 @@
+/* Automatisch erzeugt von matugen aus {{image}} – Vorlage: ~/.config/matugen/templates/zen-userChrome.css
+   Zen/Firefox lesen userChrome.css beim Start (Neustart des Browsers nach Super+W). */
+:root {
+  --ist-bg:      {{colors.surface.default.hex}};
+  --ist-bg-alt:  {{colors.surface_container_high.default.hex}};
+  --ist-fg:      {{colors.on_surface.default.hex}};
+  --ist-dim:     {{colors.outline.default.hex}};
+  --ist-accent:  {{colors.primary.default.hex}};
+  --ist-on-acc:  {{colors.on_primary.default.hex}};
+
+  --toolbar-bgcolor: var(--ist-bg) !important;
+  --toolbar-color: var(--ist-fg) !important;
+  --lwt-accent-color: var(--ist-bg) !important;
+  --lwt-text-color: var(--ist-fg) !important;
+  --arrowpanel-background: var(--ist-bg-alt) !important;
+  --arrowpanel-color: var(--ist-fg) !important;
+  --arrowpanel-border-color: var(--ist-accent) !important;
+  --urlbar-box-bgcolor: var(--ist-bg-alt) !important;
+  --focus-outline-color: var(--ist-accent) !important;
+  --zen-primary-color: var(--ist-accent) !important;
+  --zen-colors-primary: var(--ist-bg) !important;
+  --zen-colors-secondary: var(--ist-bg-alt) !important;
+  --zen-colors-tertiary: var(--ist-bg) !important;
+  --zen-colors-border: var(--ist-accent) !important;
+  --tab-selected-bgcolor: var(--ist-bg-alt) !important;
+  --tab-selected-textcolor: var(--ist-accent) !important;
+}
+
+/* -ist-Look: flache Flächen, 1-px-Rahmen in Akzentfarbe, kleine Radien */
+#urlbar-background, #searchbar { border: 1px solid color-mix(in srgb, var(--ist-accent) 55%, transparent) !important;
+  border-radius: 4px !important; box-shadow: none !important; }
+#urlbar[focused="true"] > #urlbar-background { border-color: var(--ist-accent) !important; }
+.tabbrowser-tab[selected] .tab-background { border: 1px solid var(--ist-accent) !important; border-radius: 4px !important;
+  box-shadow: none !important; }
+menupopup, panel { --panel-border-radius: 4px; }
+
+/* 2-Finger-Wisch zurück/vor – Seitenstapel-Look der Suite: gestrichelter Rahmen mit Titel-Chip */
+#historySwipeAnimationPreviousArrow, #historySwipeAnimationNextArrow {
+  background: var(--ist-bg-alt) !important;
+  border: 1px dashed var(--ist-accent) !important;
+  border-radius: 4px !important;
+  color: var(--ist-accent) !important;
+  box-shadow: none !important;
+  opacity: .92;
+}
+#historySwipeAnimationPreviousArrow[active], #historySwipeAnimationNextArrow[active] {
+  border-style: solid !important;
+  background: var(--ist-accent) !important;
+  color: var(--ist-on-acc) !important;
+}
+#historySwipeAnimationCurrentPage { outline: 1px dashed var(--ist-accent); outline-offset: -1px; }

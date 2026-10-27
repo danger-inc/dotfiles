@@ -1,0 +1,14 @@
+/* V5 „Reiter“ – kompakte Kästen ohne Seitenrahmen, nur eine kräftige Unterkante (wie Tabs) */
+@import url("file://@HOME@/.config/waybar/variants/base.css");
+#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #ws, #custom-power {
+    background-color: alpha(@background, 0.82); color: @foreground; border-bottom: 2px solid @primary;
+    border-radius: 6px 6px 2px 2px; padding: 0 12px; margin: 6px 2px; transition: background-color 120ms, color 120ms; }
+#clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover,
+#custom-notification:hover, #connectivity:hover { background-color: @primary; color: @on_primary; }
+#network, #bluetooth { color: @primary; }
+#connectivity:hover #network, #connectivity:hover #bluetooth { color: @on_primary; }
+#ws { padding: 0 3px; }
+#custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4 { color: alpha(@foreground, 0.75); padding: 0 10px; margin: 4px 1px; border-radius: 4px; }
+#custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active { color: @primary; background-color: alpha(@primary, 0.16); }
+#custom-power { color: @primary; margin-right: 10px; }
+#custom-power:hover { background-color: @tertiary; color: @background; border-bottom-color: @tertiary; }

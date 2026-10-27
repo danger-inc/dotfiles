@@ -1,0 +1,30 @@
+# Pfad relativ zu ~   (wird von sync.sh geholt und von install.sh verlinkt)
+.config/hypr
+.config/kitty
+.config/btop
+.config/matugen
+.config/fastfetch
+.config/fish/config.fish
+.config/starship.toml
+.config/waybar
+.config/swaync
+.config/rofi
+.config/wofi
+.config/wlogout
+.local/share/rice-apps/ist-colors.py
+.local/share/rice-apps/istheme.py
+.local/share/rice-apps/ist-swipe.py
+.local/bin/ist-darkmode
+# eigene Hilfsprogramme (Waybar-Menüs, Lautstärke-Anzeige, Cursor, wofi-Fokus-Fix). Brauchen tui.py/glass.py aus einer der -ist-Apps.
+.local/share/rice-apps/ricetui.py
+.local/share/rice-apps/audio.py
+.local/share/rice-apps/bluetooth.py
+.local/share/rice-apps/network.py
+.local/share/rice-apps/volume-osd.py
+.local/share/rice-apps/volume-mixer.py
+.local/share/rice-apps/cursor
+.local/share/rice-apps/wofi-ondemand
+.local/bin/volume-osd
+.local/bin/rice-audio
+.local/bin/rice-netz
+.local/bin/rice-bluetooth

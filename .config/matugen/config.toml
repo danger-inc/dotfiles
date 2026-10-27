@@ -1,0 +1,42 @@
+# matugen: erzeugt die Systemfarben aus dem Hintergrundbild.
+# Aufruf über ~/.config/hypr/scripts/apply-colors.sh (Super+W).
+# Ergebnisse landen in ~/.cache/matugen/.
+
+[config]
+
+[templates.gtk-css]
+# Waybar, wofi, swaync, wlogout
+input_path = "~/.config/matugen/templates/colors.css"
+output_path = "~/.cache/matugen/colors.css"
+
+[templates.hyprland]
+# Fensterrahmen-Verlauf (hyprland.lua)
+input_path = "~/.config/matugen/templates/colors-hyprland.lua"
+output_path = "~/.cache/matugen/colors-hyprland.lua"
+
+[templates.hyprlock]
+input_path = "~/.config/matugen/templates/colors-hyprlock.conf"
+output_path = "~/.cache/matugen/colors-hyprlock.conf"
+
+[templates.kitty]
+input_path = "~/.config/matugen/templates/colors-kitty.conf"
+output_path = "~/.cache/matugen/colors-kitty.conf"
+
+[templates.rofi]
+input_path = "~/.config/matugen/templates/colors-rofi.rasi"
+output_path = "~/.cache/matugen/colors-rofi.rasi"
+
+[templates.wallpaper]
+# Merkt sich das aktuelle Bild, damit es beim Login wiederhergestellt wird
+input_path = "~/.config/matugen/templates/wallpaper"
+output_path = "~/.cache/matugen/wallpaper"
+
+[templates.btop]
+# btop (Klick auf CPU/RAM in Waybar)
+input_path = "~/.config/matugen/templates/btop.theme"
+output_path = "~/.config/btop/themes/matugen.theme"
+
+#ZEN# [templates.zen]
+#ZEN# # Zen-Browser (userChrome.css, wirkt nach Neustart des Browsers)
+#ZEN# input_path = "~/.config/matugen/templates/zen-userChrome.css"
+#ZEN# output_path = "~/.config/zen/@ZENPROFILE@/chrome/userChrome.css"

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Waybar-Rechtsklick: TUI-App "netz" ein-/ausblenden (~/.local/share/rice-apps/ricetui.py).
+# Der Prozess läuft dauerhaft im Hintergrund (Start aus hyprland.lua), ein Klick schreibt nur
+# den Namen in seine Leitung – darum erscheint das Fenster sofort. Optional: rice-netz <tab|hide>.
+# Kein pkill hier (kostet bis zu 100 ms) – offene Menüs schließt der Hintergrund-Prozess selbst.
+fifo=$XDG_RUNTIME_DIR/rice-tui.fifo
+read -r pid < "$XDG_RUNTIME_DIR/rice-tui.pid" 2>/dev/null
+if [[ -n $pid && -p $fifo ]] && kill -0 "$pid" 2>/dev/null; then
+    echo "netz${1:+:$1}" > "$fifo"
+else
+    setsid -f python3 "$HOME/.local/share/rice-apps/ricetui.py" --show="netz${1:+:$1}" >/dev/null 2>&1
+fi
