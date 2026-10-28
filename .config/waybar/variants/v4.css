@@ -1,5 +1,5 @@
 /* V4 "boxes with accent edge" – like V1, but each box with a colored left edge (like active panels in the apps) */
 @import url("file://@HOME@/.config/waybar/variants/v1.css");
-#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #ws, #custom-power {
+#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-eco, #custom-notification, #connectivity, #tray, #ws, #custom-power {
     border: 1px solid alpha(@primary, 0.35); border-left: 3px solid @primary; border-radius: 4px; padding: 0 12px 0 10px; }
 #clock { color: @primary; }

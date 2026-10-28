@@ -64,7 +64,7 @@ window#waybar {
 #backlight,
 #cpu,
 #memory, 
-#battery, 
+#battery, #custom-eco, 
 #custom-notification, 
 #custom-datist, 
 #mpris {
@@ -176,7 +176,7 @@ window#waybar {
 #clock:hover, 
 #pulseaudio:hover, 
 #backlight:hover,
-#battery:hover,
+#battery:hover, #custom-eco:hover,
 #memory:hover, 
 #cpu:hover, 
 #custom-notification:hover, 

@@ -1,9 +1,9 @@
 /* V1 "boxes" – the first new version, slightly larger */
 @import url("file://@HOME@/.config/waybar/variants/base.css");
-#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #custom-datist, #connectivity, #tray, #ws, #custom-power {
+#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-eco, #custom-notification, #custom-datist, #connectivity, #tray, #ws, #custom-power {
     background-color: alpha(@background, 0.82); color: @foreground; border: 1px solid alpha(@primary, 0.55);
     border-radius: 6px; padding: 0 12px; margin: 6px 2px; transition: background-color 120ms, color 120ms; }
-#clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover,
+#clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover, #custom-eco:hover,
 #custom-notification:hover, #custom-datist:hover, #connectivity:hover { background-color: @primary; color: @on_primary; border-color: @primary; }
 #network, #bluetooth { color: @primary; }
 #connectivity:hover #network, #connectivity:hover #bluetooth { color: @on_primary; }

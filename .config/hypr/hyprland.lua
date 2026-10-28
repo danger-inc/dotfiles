@@ -54,7 +54,7 @@ hl.on("hyprland.start", function ()
     -- nm-applet replaced by the waybar network module + ~/.config/waybar/scripts/wifi-menu.sh
     -- hl.exec_cmd("nm-applet")
     hl.exec_cmd("waybar")
-    hl.exec_cmd("pidof swaync || swaync")   -- Benachrichtigungen + Panel
+    hl.exec_cmd("pidof swaync || LD_PRELOAD=$HOME/.local/share/rice-apps/wofi-ondemand/layer-ondemand.so swaync")   -- Benachrichtigungen + Panel
     hl.exec_cmd("pidof hypridle || hypridle")   -- idle lock (10 min) and lock before standby
     hl.exec_cmd("python3 @HOME@/.config/waybar/scripts/autohide-fullscreen.py")   -- waybar in fullscreen only at the top edge
     hl.exec_cmd("@HOME@/.local/bin/volume-osd")   -- volume pill at the bottom center
@@ -291,8 +291,8 @@ hl.config({
 
 hl.config({
     cursor = {
-        inactive_timeout  = 0,     -- seconds without movement until hiding (0 = never; Scourge → Cursor)
-        hide_on_key_press = false, -- hide while typing
+        inactive_timeout  = 2,     -- seconds without movement until hiding (0 = never; Scourge → Cursor)
+        hide_on_key_press = true, -- hide while typing
     },
 })
 
@@ -326,6 +326,7 @@ local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("@HOME@/.local/bin/rice-music"))   -- music player on/off
 hl.bind(mainMod .. " + K", hl.dsp.exec_cmd("@HOME@/.local/bin/datist"))      -- calendar on/off
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.exec_cmd("@HOME@/.local/bin/datist --desk"))  -- Termine auf dem Hintergrund ein/aus
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("@HOME@/.local/bin/notist"))      -- notist on/off
 hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("@HOME@/.local/bin/mailist --toggle"))   -- mailist (mail) on/off
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("@HOME@/.local/bin/sharist --toggle"))   -- sharist (Quick Share) on/off
@@ -416,8 +417,9 @@ hl.bind(mainMod .. " + mouse_up",   hl.dsp.exec_cmd("~/.config/hypr/scripts/ws-s
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- close waybar menus (wifi/bluetooth) on a left click outside; the click goes through normally
+-- close waybar popups (wifi/bluetooth/battery/volume/notifications) on a click outside; the click goes through normally
 hl.bind("mouse:272", hl.dsp.exec_cmd("@HOME@/.config/waybar/scripts/menu-close-outside.sh"), { non_consuming = true })
+hl.bind("mouse:273", hl.dsp.exec_cmd("@HOME@/.config/waybar/scripts/menu-close-outside.sh"), { non_consuming = true })   -- right click too (e.g. other icon)
 
 
 -- Laptop multimedia keys for volume and LCD brightness
@@ -602,6 +604,15 @@ hl.layer_rule({
 hl.layer_rule({
     name         = "blur-music-desk",
     match        = { namespace = "^music-desk$" },
+    blur         = true,
+    ignore_alpha = 0.1,
+    animation    = "fade",
+})
+
+-- datist: appointment card permanently on the wallpaper (setting "termine auf dem hintergrundbild")
+hl.layer_rule({
+    name         = "blur-datist-desk",
+    match        = { namespace = "^datist-desk$" },
     blur         = true,
     ignore_alpha = 0.1,
     animation    = "fade",

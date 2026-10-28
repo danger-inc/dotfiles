@@ -5,9 +5,9 @@
     padding: 0 4px; margin: 6px 0; }
 .modules-left > widget:not(:first-child) > *, .modules-right > widget:not(:first-child) > * {
     border-left: 1px solid alpha(@primary, 0.22); }
-#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #custom-datist, #connectivity, #tray, #custom-power {
+#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-eco, #custom-notification, #custom-datist, #connectivity, #tray, #custom-power {
     color: @foreground; padding: 0 12px; margin: 5px 0; transition: background-color 120ms, color 120ms; }
-#clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover,
+#clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover, #custom-eco:hover,
 #custom-notification:hover, #custom-datist:hover, #connectivity:hover { background-color: alpha(@primary, 0.2); border-radius: 4px; }
 #network, #bluetooth { color: @primary; }
 #custom-separator { font-size: 0; padding: 0; margin: 0; color: transparent; }

@@ -27,6 +27,7 @@
         "cpu",
         "memory",
         "custom/separator",
+        "custom/eco",
         "battery",
         "custom/notification",
         "custom/power"
@@ -160,7 +161,7 @@
         "on-click": "~/.config/waybar/scripts/btop-toggle.sh"
     },
     "memory": {
-        "interval": 1,
+        "interval": 2,
         "format": "\uefc5  {used:0.1f}G/{total:0.1f}G",
         "cursor": false,   // a custom GTK3 hand cursor would go stale/crash after a color change; Hyprland draws it
         "on-click": "~/.config/waybar/scripts/btop-toggle.sh"
@@ -172,8 +173,18 @@
         "cursor": false,   // a custom GTK3 hand cursor would go stale/crash after a color change; Hyprland draws it
         "on-click": "setsid -f ~/.config/waybar/scripts/style-switch.sh"
     },
+    "custom/eco": {
+        // invisible: only the regular check for "switch the energy-saving mode on automatically" (battery menu)
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/eco.sh",
+        "interval": 60,
+        "signal": 9,
+        "cursor": false,   // a custom GTK3 hand cursor would go stale/crash after a color change; Hyprland draws it
+        "hide-empty-text": true
+    },
     "battery": {
-        "interval": 10,
+        "interval": 30,   // udev reports plugging/unplugging right away; capacity does not need 10 s
         "format": "{icon} {capacity}%",
         "format-charging": "\udb80\udc84 {capacity}%",
         "format-plugged": "\uf1e6 {capacity}%",
@@ -194,11 +205,12 @@
             "warning": 30,
             "critical": 15
         },
-        // click: remaining time, right click: switch power profile
+        // left click: menu with the energy-saving mode (battery-menu.sh), right click: remaining time
         "format-alt": "{icon} {time}",
         "format-time": "{H}:{m} h",
         "cursor": false,   // a custom GTK3 hand cursor would go stale/crash after a color change; Hyprland draws it
-        "on-click-right": "~/.config/waybar/scripts/power-profile.sh",
+        "on-click": "~/.config/waybar/scripts/battery-menu.sh",
+        "format-alt-click": "click-right",
         "tooltip": true
     },
     "custom/notification": {
@@ -210,7 +222,7 @@
         "exec": "~/.config/waybar/scripts/notification.py",
         "restart-interval": 1,
         "cursor": false,   // a custom GTK3 hand cursor would go stale/crash after a color change; Hyprland draws it
-        "on-click": "swaync-client -t -sw",
+        "on-click": "~/.config/waybar/scripts/notification-click.sh",   // like the menus: closes other popups, opens directly
         "on-click-right": "swaync-client -d -sw",
         "escape": false
     },

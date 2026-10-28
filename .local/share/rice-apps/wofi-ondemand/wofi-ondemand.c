@@ -4,6 +4,8 @@
 // the waybar and only closed the menu. With "on demand" wofi still gets the focus.
 // Build: gcc -shared -fPIC -O2 -o wofi-ondemand.so wofi-ondemand.c
 #define _GNU_SOURCE
+#include <dlfcn.h>
+#include <gtk/gtk.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>
@@ -64,4 +66,25 @@ struct wl_proxy *wl_proxy_marshal_constructor(struct wl_proxy *proxy, uint32_t o
     collect(proxy, opcode, args, ap);
     va_end(ap);
     return wl_proxy_marshal_array_constructor(proxy, opcode, args, iface);
+}
+
+// Hover = Auswahl: Wer mit der Maus über einen Eintrag fährt, markiert ihn (wofi zeigt sonst nur die Tastatur-Auswahl).
+// GtkFlowBoxChild hat kein eigenes Fenster und bekommt keine enter-notify-Ereignisse → Bewegung der ganzen Liste auswerten.
+static gboolean on_motion(GtkWidget *box, GdkEventMotion *ev, gpointer data) {
+    GtkFlowBoxChild *child = gtk_flow_box_get_child_at_pos(GTK_FLOW_BOX(box), (gint)ev->x, (gint)ev->y);
+    if (child && !gtk_flow_box_child_is_selected(child))
+        gtk_flow_box_select_child(GTK_FLOW_BOX(box), child);
+    return FALSE;
+}
+
+void gtk_container_add(GtkContainer *container, GtkWidget *widget) {
+    static void (*real)(GtkContainer *, GtkWidget *);
+    if (!real)
+        real = dlsym(RTLD_NEXT, "gtk_container_add");
+    real(container, widget);
+    if (GTK_IS_FLOW_BOX(container) && GTK_IS_FLOW_BOX_CHILD(widget) && !g_object_get_data(G_OBJECT(container), "ist-hover")) {
+        g_object_set_data(G_OBJECT(container), "ist-hover", GINT_TO_POINTER(1));
+        gtk_widget_add_events(GTK_WIDGET(container), GDK_POINTER_MOTION_MASK);
+        g_signal_connect(container, "motion-notify-event", G_CALLBACK(on_motion), NULL);
+    }
 }

@@ -20,3 +20,4 @@ tooltip label { color: @foreground; }
 #custom-datist.soon { color: @tertiary; border-color: @tertiary; background-color: alpha(@tertiary, 0.14); }
 #custom-datist.now { color: @on_primary; background-color: @primary; border-color: @primary; }
 #custom-datist.exam { border-color: @color9; }
+#custom-eco.off { opacity: 0.45; }

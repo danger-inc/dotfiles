@@ -4,9 +4,9 @@
 window#waybar > box { background-color: alpha(@background, 0.84); border: 1px solid alpha(@primary, 0.55); border-radius: 6px;
     padding: 0 8px; }
 #clock { background-color: @primary; color: @on_primary; border-radius: 4px; padding: 0 10px; margin: 8px 4px 8px 2px; }
-#pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #custom-power {
+#pulseaudio, #backlight, #cpu, #memory, #battery, #custom-eco, #custom-notification, #connectivity, #tray, #custom-power {
     color: @foreground; padding: 0 10px; margin: 6px 0; border-radius: 4px; transition: background-color 120ms; }
-#pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover, #custom-notification:hover,
+#pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover, #custom-eco:hover, #custom-notification:hover,
 #connectivity:hover { background-color: alpha(@primary, 0.18); }
 #clock:hover { background-color: alpha(@primary, 0.85); }
 #network, #bluetooth { color: @primary; }

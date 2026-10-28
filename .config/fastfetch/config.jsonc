@@ -24,6 +24,11 @@
   },
   "modules": [
     {
+      "type": "title",
+      "format": "{#1;33}fcknzs{#default}@arch"
+    },
+    { "type": "break" },
+    {
       "type": "custom",
       "format": "{#magenta}SYSTEM {#38;5;23}━━━━━━━━━━━━━━━━━━━━━━━━ {#magenta}01"
     },
