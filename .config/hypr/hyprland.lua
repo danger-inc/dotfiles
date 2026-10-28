@@ -332,6 +332,7 @@ hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("@HOME@/.local/bin/mailist --toggle")
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("@HOME@/.local/bin/sharist --toggle"))   -- sharist (Quick Share) on/off
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --toggle"))    -- linguist (translator) on/off
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --selection"))   -- translate the selected text
+hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("@HOME@/.local/bin/linguist --ocr"))   -- mark a screen area, recognise the text, translate it
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("~/.config/hypr/lock.sh"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
