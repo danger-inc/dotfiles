@@ -10,3 +10,13 @@ tooltip label { color: @foreground; }
 #custom-separator:hover { color: @primary; }
 /* ⏻ is wider than its space in the mono font (stuck out 4 px to the right) – Propo gives it full width */
 #custom-power { font-family: "JetBrainsMono Nerd Font Propo"; padding-left: 11px; padding-right: 11px; }
+/* datist: next appointment (datist --waybar) – own block with outline in the system colors.
+   classes: none later today soon now exam */
+#custom-datist { color: @foreground; padding: 0 10px; margin: 8px 0; border: 1px solid alpha(@primary, 0.55);
+    border-radius: 6px; background-color: alpha(@primary, 0.06); transition: background-color 120ms, color 120ms; }
+#custom-datist:hover { background-color: alpha(@primary, 0.22); border-color: @primary; }
+#custom-datist.none { color: alpha(@foreground, 0.6); border-color: alpha(@primary, 0.3); }
+#custom-datist.today { color: @foreground; }
+#custom-datist.soon { color: @tertiary; border-color: @tertiary; background-color: alpha(@tertiary, 0.14); }
+#custom-datist.now { color: @on_primary; background-color: @primary; border-color: @primary; }
+#custom-datist.exam { border-color: @color9; }

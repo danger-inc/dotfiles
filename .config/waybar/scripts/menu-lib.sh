@@ -9,7 +9,7 @@ now_ms() { date +%s%3N; }
 # wofi with keyboard "on demand" instead of "exclusive" (see ~/.local/share/rice-apps/wofi-ondemand):
 # otherwise Hyprland sends every mouse click to wofi, and a click on another waybar icon
 # (bluetooth open -> wifi) would only close the menu instead of switching directly.
-wofi() { LD_PRELOAD="$HOME/.local/share/rice-apps/wofi-ondemand/wofi-ondemand.so" command wofi "$@"; }
+wofi() { LD_PRELOAD="$HOME/.local/share/rice-apps/wofi-ondemand/wofi-ondemand.so" command wofi -D single_click=true "$@"; }
 
 # hide the volume mixer if visible (signal to the background process)
 mixer_hide() {

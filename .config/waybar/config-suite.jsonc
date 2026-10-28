@@ -14,9 +14,7 @@
     "passthrough": false,
     "gtk-layer-shell": true,
     "modules-left": [
-        "clock",
-        "pulseaudio",
-        "backlight"
+        "group/left"
     ],
     "modules-center": [
         "group/ws"
@@ -39,6 +37,16 @@
         "interval": 1,
         // right click: calendar (datist) on/off
         "cursor": false,   // a custom GTK3 hand cursor would go stale/crash after a color change; Hyprland draws it
+        "on-click-right": "~/.local/bin/datist"
+    },
+    "custom/datist": {
+        // next appointment from datist (datist --waybar); click opens the calendar
+        "exec": "~/.local/bin/datist --waybar",
+        "return-type": "json",
+        "interval": 60,
+        "signal": 8,   // datist refreshes it right away (pkill -RTMIN+8 waybar) when you hide / show an appointment
+        "tooltip": true,
+        "on-click": "~/.config/waybar/scripts/datist-menu.sh",   // left click: menu (like wifi/bluetooth)
         "on-click-right": "~/.local/bin/datist"
     },
     "pulseaudio": {
@@ -70,6 +78,11 @@
         "on-scroll-down": "brightnessctl -e4 -n2 set 5%-",
         "tooltip-format": "Helligkeit {percent}%",
         "smooth-scrolling-threshold": 1
+    },
+    "group/left": {
+        // group, so the global "spacing" does not end up between clock, appointment, sound and brightness
+        "orientation": "horizontal",
+        "modules": ["clock", "custom/datist", "pulseaudio", "backlight"]
     },
     "group/ws": {
         // group, so the global "spacing" does not end up between the numbers

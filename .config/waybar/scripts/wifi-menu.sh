@@ -74,7 +74,7 @@ label="󰒓  network settings …"
 entries+=("$label")
 actions[$label]="settings"
 
-lines=$(( ${#entries[@]} + 1 ))
+lines=${#entries[@]}
 (( lines > 12 )) && lines=12
 choice=$(printf '%s\n' "${entries[@]}" | menu --prompt "wi-fi" --lines "$lines")
 

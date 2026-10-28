@@ -66,6 +66,7 @@ window#waybar {
 #memory, 
 #battery, 
 #custom-notification, 
+#custom-datist, 
 #mpris {
     background-color: @background; 
     color: @foreground;
@@ -178,8 +179,15 @@ window#waybar {
 #battery:hover,
 #memory:hover, 
 #cpu:hover, 
-#custom-notification:hover {
+#custom-notification:hover, 
+#custom-datist:hover {
     /* Color swap during mouse interaction. */
     background-color: @color9;
     color: @background;
 }
+
+/* datist: next appointment (datist --waybar) – classes: none later today soon now exam */
+#custom-datist.none { color: alpha(@foreground, 0.6); }
+#custom-datist.soon { color: @tertiary; border-color: @tertiary; }
+#custom-datist.now { background-color: @primary; color: @background; border-color: @primary; }
+#custom-datist.exam { border-color: @color9; }

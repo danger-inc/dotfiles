@@ -39,7 +39,7 @@ actions[$label]="$HOME/.local/bin/rice-bluetooth"
 choice=$(printf '%s\n' "${entries[@]}" | wofi --dmenu \
     --style "$HOME/.config/wofi/style.css" \
     --prompt "bluetooth" \
-    --width 380 --lines $(( ${#entries[@]} + 1 )) \
+    --width 380 --lines ${#entries[@]} \
     --location top_left --xoffset "$(menu_xoffset 380)" --yoffset 10)
 
 [[ -n $choice && -n ${actions[$choice]} ]] || exit 0

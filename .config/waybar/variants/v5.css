@@ -1,10 +1,10 @@
 /* V5 "tabs" – compact boxes without side border, only a strong bottom edge (like tabs) */
 @import url("file://@HOME@/.config/waybar/variants/base.css");
-#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #connectivity, #tray, #ws, #custom-power {
+#clock, #pulseaudio, #backlight, #cpu, #memory, #battery, #custom-notification, #custom-datist, #connectivity, #tray, #ws, #custom-power {
     background-color: alpha(@background, 0.82); color: @foreground; border-bottom: 2px solid @primary;
     border-radius: 6px 6px 2px 2px; padding: 0 12px; margin: 6px 2px; transition: background-color 120ms, color 120ms; }
 #clock:hover, #pulseaudio:hover, #backlight:hover, #cpu:hover, #memory:hover, #battery:hover,
-#custom-notification:hover, #connectivity:hover { background-color: @primary; color: @on_primary; }
+#custom-notification:hover, #custom-datist:hover, #connectivity:hover { background-color: @primary; color: @on_primary; }
 #network, #bluetooth { color: @primary; }
 #connectivity:hover #network, #connectivity:hover #bluetooth { color: @on_primary; }
 #ws { padding: 0 3px; }
